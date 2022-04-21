@@ -1,41 +1,48 @@
 package com.epam.laboratory.restapipractice.model;
 
+import com.epam.laboratory.restapipractice.entity.ClientEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Client {
 
-    private Integer id;
-    private String name;
-    private String email;
-    private String phone;
+    private Long id;
+    private String clientName;
+    private List<Order> orders;
 
-    public Integer getId() {
+    public static Client toModel(ClientEntity entity) {
+        Client model = new Client();
+        model.setId(entity.getId());
+        model.setClientName(entity.getClientName());
+        model.setOrders(entity.getOrders().stream().map(Order::toModel).collect(Collectors.toList()));
+        return model;
+    }
+
+    public Client() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
-    public String getEmail() {
-        return email;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

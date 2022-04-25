@@ -3,6 +3,7 @@ package com.epam.laboratory.restapipractice.service;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
+import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

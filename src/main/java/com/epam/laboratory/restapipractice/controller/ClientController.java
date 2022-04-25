@@ -35,7 +35,7 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping
+    @GetMapping(value = "/clients")
     public ResponseEntity<?> getClientOrders(@RequestBody ClientEntity client) {
         final List<OrderEntity> orders = clientService.findClientOrders(client);
         return orders != null

@@ -11,6 +11,7 @@ public class OrderEntity {
     private String clientName;
     private Boolean completed;
     private String deliveryInf;
+    private String paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -57,5 +58,13 @@ public class OrderEntity {
 
     public void setClient(ClientEntity client) {
         this.client = client;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

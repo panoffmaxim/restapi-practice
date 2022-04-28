@@ -4,9 +4,11 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.service.ClientService;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -41,6 +43,25 @@ public class ClientController {
         return orders != null
                 ? new ResponseEntity<>(id, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/random-math")
+    public String getRandomMath() {
+        String apiUrl = "http://numbersapi.com/random/math";
+        String[] urlSplits = apiUrl.split("/");
+        String lastOne = urlSplits[urlSplits.length - 1];
+        RestTemplate restTemplate = new RestTemplate();
+        String resultTemplate = restTemplate.getForObject(apiUrl, String.class);
+        StringBuilder jsonString = new StringBuilder();
+        jsonString.append("{\"service\":\"")
+                .append(lastOne)
+                .append("\",")
+                .append("\"randomFact\":\"")
+                .append(resultTemplate)
+                .append("\"}");
+        String jsonStringResult = jsonString.toString();
+        JSONObject jsonObject = new JSONObject(jsonStringResult);
+        return jsonObject.toString();
     }
 
     @PutMapping(value = "/{id}")

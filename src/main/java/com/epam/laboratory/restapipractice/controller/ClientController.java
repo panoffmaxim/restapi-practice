@@ -1,8 +1,8 @@
 package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
+import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +20,13 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping(value = "/clients")
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody ClientEntity client) {
         clientService.create(client);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/clients/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Client> read(@PathVariable(name = "id") Long id) {
         final Client client = clientService.read(id);
 
@@ -35,15 +35,15 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/clients")
-    public ResponseEntity<?> getClientOrders(@RequestBody ClientEntity client) {
-        final List<OrderEntity> orders = clientService.findClientOrders(client);
+    @GetMapping
+    public ResponseEntity<?> getClientOrders(@RequestParam Long id) {
+        final List<Order> orders = clientService.findClientOrders(id);
         return orders != null
-                ? new ResponseEntity<>(client, HttpStatus.OK)
+                ? new ResponseEntity<>(id, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping(value = "/clients/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody ClientEntity client) {
         final boolean updated = clientService.update(client, id);
 
@@ -52,7 +52,7 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "/clients/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         final boolean deleted = clientService.delete(id);
 

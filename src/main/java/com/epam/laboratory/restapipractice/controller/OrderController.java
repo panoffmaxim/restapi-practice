@@ -17,7 +17,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity createOrder(@RequestBody OrderEntity order,
-                                     @RequestParam Long clientId) {
+                                      @RequestParam Long clientId) {
         try {
             return ResponseEntity.ok(orderService.createOrder(order, clientId));
         } catch (Exception e) {

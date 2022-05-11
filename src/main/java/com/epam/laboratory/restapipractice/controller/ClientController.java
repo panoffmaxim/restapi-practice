@@ -1,10 +1,11 @@
 package com.epam.laboratory.restapipractice.controller;
 
+import com.epam.laboratory.restapipractice.RandomResponse;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.service.ClientService;
-import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
+    @Value("${apiUrl.value}")
+    private String apiUrl;
+    private static final String template = "%s";
 
     private final ClientService clientService;
 
@@ -45,23 +49,11 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/random-math")
-    public String getRandomMath() {
-        String apiUrl = "http://numbersapi.com/random/math";
-        String[] urlSplits = apiUrl.split("/");
-        String lastOne = urlSplits[urlSplits.length - 1];
+    @GetMapping(value = "/random")
+    public RandomResponse randomResponse(@RequestParam(value="service", required=false, defaultValue="math") String service) {
         RestTemplate restTemplate = new RestTemplate();
         String resultTemplate = restTemplate.getForObject(apiUrl, String.class);
-        StringBuilder jsonString = new StringBuilder();
-        jsonString.append("{\"service\":\"")
-                .append(lastOne)
-                .append("\",")
-                .append("\"randomFact\":\"")
-                .append(resultTemplate)
-                .append("\"}");
-        String jsonStringResult = jsonString.toString();
-        JSONObject jsonObject = new JSONObject(jsonStringResult);
-        return jsonObject.toString();
+        return new RandomResponse(String.format(template, service), resultTemplate);
     }
 
     @PutMapping(value = "/{id}")

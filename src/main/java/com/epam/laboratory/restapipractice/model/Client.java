@@ -1,14 +1,20 @@
 package com.epam.laboratory.restapipractice.model;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Schema(description = "Модель клиента")
 public class Client {
-
+    @Schema(description = "Идентификатор", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
+
+    @Schema(description = "ФИО", example = "Иванов Иван Иванович")
     private String clientName;
+
+    @Schema(description = "Список заказов клиента")
     private List<Order> orders;
 
     public static Client toModel(ClientEntity entity) {

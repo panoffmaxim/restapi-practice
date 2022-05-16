@@ -5,6 +5,8 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +15,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequestMapping("/clients")
+@Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
 public class ClientController {
     @Value("${apiUrl.value}")
     private String apiUrl;
@@ -26,13 +31,15 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @PostMapping
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     public ResponseEntity<?> create(@RequestBody ClientEntity client) {
         clientService.create(client);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     public ResponseEntity<Client> read(@PathVariable(name = "id") Long id) {
         final Client client = clientService.read(id);
 
@@ -41,7 +48,8 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Заказы клиента", description = "Возвращает доступные заказы клиента по его ID")
     public ResponseEntity<?> getClientOrders(@RequestParam Long id) {
         final List<Order> orders = clientService.findClientOrders(id);
         return orders != null
@@ -49,14 +57,8 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/random")
-    public RandomResponse randomResponse(@RequestParam(value="service", required=false, defaultValue="math") String service) {
-        RestTemplate restTemplate = new RestTemplate();
-        String resultTemplate = restTemplate.getForObject(apiUrl, String.class);
-        return new RandomResponse(String.format(template, service), resultTemplate);
-    }
-
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Обновление данных клиента", description = "Обновляет клиента с заданным ID")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody ClientEntity client) {
         final boolean updated = clientService.update(client, id);
 
@@ -65,12 +67,21 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         final boolean deleted = clientService.delete(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
+    @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Создание нового экземпляра RestTemplate", description = "Возвращает ответ от внешнего API посредством RestTemplate")
+    public RandomResponse randomResponse(@RequestParam(value="service", required=false, defaultValue="math") String service) {
+        RestTemplate restTemplate = new RestTemplate();
+        String resultTemplate = restTemplate.getForObject(apiUrl, String.class);
+        return new RandomResponse(String.format(template, service), resultTemplate);
     }
 }

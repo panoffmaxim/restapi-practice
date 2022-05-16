@@ -1,18 +1,27 @@
 package com.epam.laboratory.restapipractice.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "client")
+@Schema(description = "Сущность клиента")
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Идентификатор", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
+
+    @Schema(description = "ФИО", example = "Иванов Иван Иванович")
     private String clientName;
+
+    @Schema(description = "Телефон клиента")
     private String phone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
+    @Schema(description = "Список заказов клиента")
     private List<OrderEntity> orders;
 
     public ClientEntity() {

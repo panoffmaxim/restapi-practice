@@ -8,9 +8,12 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "clientName")
     private String clientName;
     private Boolean completed;
+    @Column(name = "deliveryInf")
     private String deliveryInf;
+    @Column(name = "paymentMethod")
     private String paymentMethod;
 
     @ManyToOne

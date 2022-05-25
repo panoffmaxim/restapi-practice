@@ -21,14 +21,14 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/clients")
 @Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
 public class ClientController {
-    @Value("${apiUrl.value}")
-    private String apiUrl;
+    private final String apiUrl;
     private static final String template = "%s";
 
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, @Value("${apiUrl.value}") String apiUrl) {
         this.clientService = clientService;
+        this.apiUrl = apiUrl;
     }
 
     @PostMapping(produces = APPLICATION_JSON_VALUE)

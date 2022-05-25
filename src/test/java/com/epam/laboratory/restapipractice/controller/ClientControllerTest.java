@@ -2,69 +2,71 @@ package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
-import org.aspectj.lang.annotation.Before;
+import com.epam.laboratory.restapipractice.model.Client;
+import com.epam.laboratory.restapipractice.service.ClientService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-class ClientControllerTest extends AbstractTest {
-    @Override
-    @Before("create")
-    public void setUp() {
-        super.setUp();
-    }
-//    @Autowired
-//    private ClientController clientController;
-//    @MockBean
-//    private ClientService clientService;
+public class ClientControllerTest {
+
+    private final ClientService clientService = mock(ClientService.class);
+
+    private final String apiUrl = "http://test.tt";
+
+    private final ClientController clientController = new ClientController(clientService, apiUrl);
 
     @Test
-    public void create() throws Exception {
+    void getClientOrders_returnsNotFound() {
+        //given
+        var clientId = 1L;
+        when(clientService.findClientOrders(clientId)).thenReturn(null);
+
+        //when
+        var response = clientController.getClientOrders(clientId);
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void readClientById_ShouldReturnClientAndOkStatus() {
         ClientEntity client = new ClientEntity();
-//        clientController.create(client);
         OrderEntity orderOne = new OrderEntity();
-        orderOne.setId(2L);
+        OrderEntity orderTwo = new OrderEntity();
+
         orderOne.setCompleted(true);
         orderOne.setClientName("josh");
         orderOne.setPaymentMethod("credit-card");
-        OrderEntity orderTwo = new OrderEntity();
-        orderTwo.setId(3L);
+        orderOne.setDeliveryInf("today");
         orderTwo.setCompleted(true);
         orderTwo.setClientName("dan");
         orderTwo.setPaymentMethod("cash");
+        orderTwo.setDeliveryInf("tomorrow");
         List<OrderEntity> orders = new ArrayList<>();
         orders.add(orderOne);
         orders.add(orderTwo);
-
-        String uri = "/clients";
         client.setId(1L);
         client.setClientName("Ginger");
         client.setPhone("777");
         client.setOrders(orders);
-        String inputJson = super.mapToJson(client);
-        MvcResult mvcResult = mvc.perform(post(uri)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(inputJson)).andReturn();
 
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(201, status);
-
-//        mockMvc.perform(post("/clients")
-//                        .contentType(AbstractTest.APPLICATION_JSON_UTF8)
-//                        .content(AbstractTest.convertObjectToJsonBytes(dto))
-//                )
-//                .andExpect(status().isCreated())
-//                .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-//                .andExpect(jsonPath("$.id", is(1)))
-//                .andExpect(jsonPath("$.clientName", is("description")))
-//                .andExpect(jsonPath("$.phone", is("title")));
+        when(clientService.read(anyLong())).thenReturn(Client.toModel(client));
+        ResponseEntity<Client> clientEntity = clientController.read(1L);
+        assertNotNull(clientEntity);
+        assertThat(clientEntity.getStatusCodeValue()).isEqualTo(200);
     }
 }

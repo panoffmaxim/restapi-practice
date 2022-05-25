@@ -15,6 +15,7 @@ public class ClientEntity {
     private Long id;
 
     @Schema(description = "ФИО", example = "Иванов Иван Иванович")
+    @Column(name = "clientName")
     private String clientName;
 
     @Schema(description = "Телефон клиента")

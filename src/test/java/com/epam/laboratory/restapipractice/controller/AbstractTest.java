@@ -1,9 +1,5 @@
 package com.epam.laboratory.restapipractice.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -22,6 +18,10 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

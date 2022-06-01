@@ -1,4 +1,4 @@
-package com.epam.laboratory.restapipractice;
+package com.epam.laboratory.restapipractice.response;
 
 public class RandomResponse {
     private final String service;

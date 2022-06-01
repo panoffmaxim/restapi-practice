@@ -1,6 +1,6 @@
 package com.epam.laboratory.restapipractice.controller;
 
-import com.epam.laboratory.restapipractice.RandomResponse;
+import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.model.Order;
@@ -79,7 +79,7 @@ public class ClientController {
 
     @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание нового экземпляра RestTemplate", description = "Возвращает ответ от внешнего API посредством RestTemplate")
-    public RandomResponse randomResponse(@RequestParam(value="service", required=false, defaultValue="math") String service) {
+    public RandomResponse randomResponse(@RequestParam(value = "service", required = false, defaultValue = "math") String service) {
         RestTemplate restTemplate = new RestTemplate();
         String resultTemplate = restTemplate.getForObject(apiUrl, String.class);
         return new RandomResponse(String.format(template, service), resultTemplate);

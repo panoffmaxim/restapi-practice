@@ -1,8 +1,8 @@
 package com.epam.laboratory.restapipractice.repository;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClientRepo extends CrudRepository<ClientEntity, Long> {
+public interface ClientRepo extends JpaRepository<ClientEntity, Long> {
     ClientEntity findByClientName(String clientName);
 }

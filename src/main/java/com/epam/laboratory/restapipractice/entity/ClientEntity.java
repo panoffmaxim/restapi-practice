@@ -3,6 +3,7 @@ package com.epam.laboratory.restapipractice.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -21,11 +22,50 @@ public class ClientEntity {
     @Schema(description = "Телефон клиента")
     private String phone;
 
+    @Schema(description = "Пароль клиента")
+    private String password;
+
+    @Schema(description = "Статус аакаунта")
+    private boolean enabled;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     @Schema(description = "Список заказов клиента")
     private List<OrderEntity> orders;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
+
     public ClientEntity() {
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 
     public Long getId() {

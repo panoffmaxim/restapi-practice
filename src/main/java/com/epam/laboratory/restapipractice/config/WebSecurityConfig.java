@@ -40,8 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select clientName, password, enabled from client where clientName=?")
-                .authoritiesByUsernameQuery("select clientName, role from client where clientName=?");
+                .usersByUsernameQuery("select clientName, phone, password, enabled from client where clientName=?")
+                .authoritiesByUsernameQuery("select c.clientName, cr.roles from client c inner join client_role cr on c.id = cr.client_id where c.clientName=?");
     }
 
     @Bean

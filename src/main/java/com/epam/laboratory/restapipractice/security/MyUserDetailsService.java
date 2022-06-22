@@ -22,10 +22,8 @@ import java.util.List;
 @Service("userDetailsService")
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
-
     @Autowired
     private ClientRepo clientRepo;
-
 
     @Autowired
     private RoleRepo roleRepo;
@@ -54,16 +52,16 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
     private List<String> getPrivileges(Collection<Role> roles) {
-
         List<String> privileges = new ArrayList<>();
         List<Privilege> collection = new ArrayList<>();
-        for (Role role : roles) {
+
+        roles.stream().forEach(role -> {
             privileges.add(role.getName());
             collection.addAll(role.getPrivileges());
-        }
-        for (Privilege item : collection) {
-            privileges.add(item.getName());
-        }
+        });
+        collection.stream().forEach(privilege -> {
+            privileges.add(privilege.getName());
+        });
         return privileges;
     }
 

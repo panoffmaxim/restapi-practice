@@ -13,7 +13,7 @@ public class OrderEntity {
     private Boolean completed;
     @Column(name = "deliveryInf")
     private String deliveryInf;
-    @Column(name = "paymentMethod")
+    @Column(name = "payment_method")
     private String paymentMethod;
 
     @ManyToOne

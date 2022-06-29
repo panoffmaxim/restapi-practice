@@ -24,7 +24,6 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private ClientRepo clientRepo;
-
     @Autowired
     private RoleRepo roleRepo;
 

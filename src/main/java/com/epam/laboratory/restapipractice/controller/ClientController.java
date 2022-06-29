@@ -7,6 +7,8 @@ import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/clients")
 @Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
 public class ClientController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final String apiUrl;
     private static final String template = "%s";
 
@@ -45,7 +48,7 @@ public class ClientController {
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     public ResponseEntity<Client> read(@PathVariable(name = "id") Long id) {
         final Client client = clientService.read(id);
-
+        LOGGER.info("Controller: Fetching user with id {}", id);
         return client != null
                 ? new ResponseEntity<>(client, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);

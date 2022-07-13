@@ -1,24 +1,22 @@
 version: '3'
 services:
-  flyway:
-    image: flyway/flyway
-    command: -url=jdbc:mysql://db -schemas=rest -user=root -password=root -connectRetries=60 migrate
-    volumes:
-      - .:/flyway/sql
+  server:
+    build: .
+    ports:
+      - 8080:8080
     depends_on:
       - db
+    environment:
+      - MYSQL_HOST=db
   db:
     image: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=rest
+    volumes:
+      - sql_volume:/home/mysql/data
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     ports:
       - 3307:3306
-  server:
-    image: springio/gs-spring-boot-docker
-    ports:
-      - 8080:8080
-    depends_on:
-      - db
-      - flyway
+volumes:
+  sql_volume:

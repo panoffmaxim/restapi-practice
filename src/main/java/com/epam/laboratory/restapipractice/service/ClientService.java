@@ -92,13 +92,36 @@ public class ClientService {
         ClientEntity client = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            String hql = " FROM ClientEntity S WHERE S.id = :clientId";
+            String hql = "FROM ClientEntity S WHERE S.id = :clientId";
             Query query = session.createQuery(hql);
             query.setParameter("clientId", id);
             List results = query.getResultList();
 
             if (results != null && !results.isEmpty()) {
                 client = (ClientEntity) results.get(0);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return client;
+    }
+
+    public ClientEntity getClientName(String clientName) {
+        Transaction transaction = null;
+        ClientEntity client = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            String hql = "FROM ClientEntity C WHERE C.clientName = :clientName";
+            Query query = session.createQuery(hql);
+            query.setParameter("clientName", clientName);
+            List results = query.getResultList();
+
+            if (results != null && !results.isEmpty()) {
+                client = (ClientEntity) results.get(1);
             }
             transaction.commit();
         } catch (Exception e) {

@@ -3,9 +3,7 @@
 //import com.epam.laboratory.restapipractice.entity.ClientEntity;
 //import com.epam.laboratory.restapipractice.entity.Privilege;
 //import com.epam.laboratory.restapipractice.entity.Role;
-//import com.epam.laboratory.restapipractice.repository.ClientRepo;
-//import com.epam.laboratory.restapipractice.repository.RoleRepo;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import com.epam.laboratory.restapipractice.service.ClientService;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -22,16 +20,17 @@
 //@Service("userDetailsService")
 //@Transactional
 //public class MyUserDetailsService implements UserDetailsService {
-//    @Autowired
-//    private ClientRepo clientRepo;
-//    @Autowired
-//    private RoleRepo roleRepo;
+//    private final ClientService clientService;
+//
+//    public MyUserDetailsService(ClientService clientService) {
+//        this.clientService = clientService;
+//    }
 //
 //    @Override
 //    public UserDetails loadUserByUsername(String clientName)
 //            throws UsernameNotFoundException {
 //
-//        ClientEntity clientEntity = clientRepo.findByClientName(clientName);
+//        ClientEntity clientEntity = clientService.getClientName(clientName);
 //        if (clientEntity == null) {
 //            return new org.springframework.security.core.userdetails.User(
 //                    " ", " ", true, true, true, true,

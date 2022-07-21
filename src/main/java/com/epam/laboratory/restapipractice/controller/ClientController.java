@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,7 +32,6 @@ public class ClientController {
         this.apiUrl = apiUrl;
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     public ResponseEntity<?> create(@RequestBody ClientEntity client) {
@@ -41,7 +39,6 @@ public class ClientController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     public ResponseEntity<ClientEntity> read(@PathVariable(name = "id") Long id) {
@@ -52,7 +49,6 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы клиента", description = "Возвращает доступные заказы клиента по его ID")
     public ResponseEntity<?> getClients() {

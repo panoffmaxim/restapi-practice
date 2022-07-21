@@ -1,9 +1,7 @@
 package com.epam.laboratory.restapipractice.controller;
 
-import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.model.Client;
-import com.epam.laboratory.restapipractice.model.Order;
+import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,15 +37,15 @@ public class ClientController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     public ResponseEntity<?> create(@RequestBody ClientEntity client) {
-        clientService.create(client);
+        clientService.saveClient(client);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
-    public ResponseEntity<Client> read(@PathVariable(name = "id") Long id) {
-        final Client client = clientService.read(id);
+    public ResponseEntity<ClientEntity> read(@PathVariable(name = "id") Long id) {
+        final ClientEntity client = clientService.getClient(id);
         LOGGER.info("Controller: Fetching user with id {}", id);
         return client != null
                 ? new ResponseEntity<>(client, HttpStatus.OK)
@@ -57,17 +55,17 @@ public class ClientController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы клиента", description = "Возвращает доступные заказы клиента по его ID")
-    public ResponseEntity<?> getClientOrders(@RequestParam Long id) {
-        final List<Order> orders = clientService.findClientOrders(id);
+    public ResponseEntity<?> getClients() {
+        final List<ClientEntity> orders = clientService.getClients();
         return orders != null
-                ? new ResponseEntity<>(id, HttpStatus.OK)
+                ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Обновление данных клиента", description = "Обновляет клиента с заданным ID")
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody ClientEntity client) {
-        final boolean updated = clientService.update(client, id);
+        final boolean updated = clientService.updateClient(client);
 
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -77,7 +75,7 @@ public class ClientController {
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        final boolean deleted = clientService.delete(id);
+        final boolean deleted = clientService.deleteClient(id);
 
         return deleted
                 ? new ResponseEntity<>(HttpStatus.OK)

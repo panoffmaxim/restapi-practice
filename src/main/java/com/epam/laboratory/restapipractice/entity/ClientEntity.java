@@ -20,26 +20,30 @@ public class ClientEntity {
     private String clientName;
 
     @Schema(description = "Телефон клиента")
+    @Column(name = "phone")
     private String phone;
 
     @Schema(description = "Пароль клиента")
+    @Column(name = "password")
     private String password;
 
     @Schema(description = "Статус аакаунта")
+    @Column(name = "enabled")
     private boolean enabled;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     @Schema(description = "Список заказов клиента")
+    @Column(name = "orders")
     private List<OrderEntity> orders;
 
-    @ManyToMany
-    @JoinTable(
-            name = "client_roles",
-            joinColumns = @JoinColumn(
-                    name = "client_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "client_roles",
+//            joinColumns = @JoinColumn(
+//                    name = "client_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "role_id", referencedColumnName = "id"))
+//    private Collection<Role> roles;
 
     public ClientEntity() {
     }
@@ -60,13 +64,13 @@ public class ClientEntity {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
+//    public Collection<Role> getRoles() {
+//        return roles;
+//    }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
+//    public void setRoles(Collection<Role> roles) {
+//        this.roles = roles;
+//    }
 
     public Long getId() {
         return id;

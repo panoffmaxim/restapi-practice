@@ -10,6 +10,8 @@ public class OrderEntity {
     private Long id;
     @Column(name = "clientName")
     private String clientName;
+
+    @Column(name = "completed")
     private Boolean completed;
     @Column(name = "deliveryInf")
     private String deliveryInf;

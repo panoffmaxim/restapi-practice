@@ -4,14 +4,15 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-public class Role {
+@Table(name = "Role")
+public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roleEntities")
     private Collection<ClientEntity> users;
 
     @ManyToMany
@@ -21,13 +22,13 @@ public class Role {
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    private Collection<PrivilegeEntity> privilegeEntities;
 
-    public Role() {
+    public RoleEntity() {
         super();
     }
 
-    public Role(final String name) {
+    public RoleEntity(final String name) {
         super();
         this.name = name;
     }
@@ -56,11 +57,11 @@ public class Role {
         this.users = users;
     }
 
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
+    public Collection<PrivilegeEntity> getPrivileges() {
+        return privilegeEntities;
     }
 
-    public void setPrivileges(Collection<Privilege> privileges) {
-        this.privileges = privileges;
+    public void setPrivileges(Collection<PrivilegeEntity> privilegeEntities) {
+        this.privilegeEntities = privilegeEntities;
     }
 }

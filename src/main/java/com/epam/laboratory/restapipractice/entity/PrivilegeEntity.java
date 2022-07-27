@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-public class Privilege {
+@Table(name = "Privilege")
+public class PrivilegeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,14 +13,14 @@ public class Privilege {
 
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+    @ManyToMany(mappedBy = "privilegeEntities")
+    private Collection<RoleEntity> roleEntities;
 
-    public Privilege() {
+    public PrivilegeEntity() {
         super();
     }
 
-    public Privilege(final String name) {
+    public PrivilegeEntity(final String name) {
         super();
         this.name = name;
     }
@@ -40,11 +41,11 @@ public class Privilege {
         this.name = name;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Collection<RoleEntity> getRoles() {
+        return roleEntities;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Collection<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
     }
 }

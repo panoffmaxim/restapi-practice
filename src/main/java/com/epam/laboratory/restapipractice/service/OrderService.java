@@ -20,7 +20,7 @@
 //    private ClientRepo clientRepo;
 //
 //    public Order createOrder(OrderEntity order, Long clientId) {
-//        ClientEntity client = clientRepo.findById(clientId).get();
+//        ClientEntity client = clientRepo.findClientById(clientId);
 //        order.setClient(client);
 //        return Order.toModel(orderRepo.save(order));
 //    }

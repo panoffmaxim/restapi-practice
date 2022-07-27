@@ -1,14 +1,15 @@
 package com.epam.laboratory.restapipractice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
+@JsonIgnoreProperties(value = {"roles"})
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +28,14 @@ public class ClientEntity {
     @Column(name = "password")
     private String password;
 
-    @Schema(description = "Статус аакаунта")
+    @Schema(description = "Статус аккаунта")
     @Column(name = "enabled")
     private boolean enabled;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
+    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     @Schema(description = "Список заказов клиента")
     @Column(name = "orders")
-    private List<OrderEntity> orders;
+    private List<OrderEntity> orders;*/
 
     @ManyToMany
     @JoinTable(
@@ -43,7 +44,7 @@ public class ClientEntity {
                     name = "client_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Collection<RoleEntity> roleEntities;
 
     public ClientEntity() {
     }
@@ -64,12 +65,12 @@ public class ClientEntity {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+    public Collection<RoleEntity> getRoles() {
+        return roleEntities;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Collection<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
     }
 
     public Long getId() {
@@ -96,11 +97,11 @@ public class ClientEntity {
         this.phone = phone;
     }
 
-    public List<OrderEntity> getOrders() {
+    /*public List<OrderEntity> getOrders() {
         return orders;
     }
 
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
-    }
+    }*/
 }

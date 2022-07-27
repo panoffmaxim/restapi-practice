@@ -1,10 +1,10 @@
-//package com.epam.laboratory.restapipractice.repository;
-//
-//import com.epam.laboratory.restapipractice.entity.Privilege;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//public interface PrivilegeRepo extends JpaRepository<Privilege, Long> {
-//    Privilege findByName(String name);
-//    @Override
-//    void delete(Privilege privilege);
-//}
+package com.epam.laboratory.restapipractice.repository;
+
+import com.epam.laboratory.restapipractice.entity.PrivilegeEntity;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PrivilegeRepo {
+    PrivilegeEntity findByName(String name);
+    void delete(PrivilegeEntity privilegeEntity);
+}

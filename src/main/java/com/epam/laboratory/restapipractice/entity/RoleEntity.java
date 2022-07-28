@@ -6,7 +6,6 @@ import java.util.Collection;
 @Entity
 @Table(name = "Role")
 public class RoleEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

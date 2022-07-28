@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -25,11 +24,6 @@ public class OrderController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity getAllOrders() {
-        return ResponseEntity.ok(orderService.findAllOrders());
-    }
-
     @PutMapping
     public ResponseEntity completeOrder(@RequestParam Long id) {
         try {
@@ -37,5 +31,10 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка");
         }
+    }
+
+    @GetMapping
+    public ResponseEntity getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 }

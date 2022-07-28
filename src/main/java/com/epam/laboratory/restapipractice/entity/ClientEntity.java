@@ -9,7 +9,6 @@ import java.util.Collection;
 @Entity
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
-@JsonIgnoreProperties(value = {"roles"})
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +36,7 @@ public class ClientEntity {
     @Column(name = "orders")
     private List<OrderEntity> orders;*/
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "client_roles",
             joinColumns = @JoinColumn(

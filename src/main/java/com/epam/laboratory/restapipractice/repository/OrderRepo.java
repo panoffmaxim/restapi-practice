@@ -1,7 +1,11 @@
 package com.epam.laboratory.restapipractice.repository;
 
-import org.springframework.stereotype.Repository;
+import com.epam.laboratory.restapipractice.entity.OrderEntity;
 
-@Repository
+import java.util.List;
+
 public interface OrderRepo {
+    OrderEntity saveOrder(OrderEntity order);
+    OrderEntity findOrderById(Long id);
+    List<OrderEntity> findAllOrders();
 }

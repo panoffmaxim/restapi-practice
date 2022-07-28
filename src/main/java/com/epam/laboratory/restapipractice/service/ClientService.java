@@ -38,7 +38,6 @@ public class ClientService {
     }
 
     public List<ClientEntity> getAllClients() {
-        clientRepoImpl.findAllClients();
-        return null;
+        return clientRepoImpl.findAllClients();
     }
 }

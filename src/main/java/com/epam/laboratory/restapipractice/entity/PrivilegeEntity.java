@@ -6,7 +6,6 @@ import java.util.Collection;
 @Entity
 @Table(name = "Privilege")
 public class PrivilegeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

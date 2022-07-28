@@ -35,14 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    /*@Autowired
-    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().passwordEncoder(encoder())
-                .dataSource(dataSource);
-                //.usersByUsernameQuery("select * from client where clientName=?")
-    //            .authoritiesByUsernameQuery("select c.clientName, cr.roles from client c inner join client_role cr on c.id = cr.client_id where c.clientName=?");
-    }*/
-
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();

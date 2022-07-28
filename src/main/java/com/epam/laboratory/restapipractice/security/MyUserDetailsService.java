@@ -3,8 +3,8 @@ package com.epam.laboratory.restapipractice.security;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.PrivilegeEntity;
 import com.epam.laboratory.restapipractice.entity.RoleEntity;
-import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.RoleRepo;
+import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,20 +23,17 @@ import java.util.List;
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
-    private ClientRepo clientRepo;
+    private ClientRepoImpl clientRepoImpl;
     @Autowired
     private RoleRepo roleRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String clientName)
-            throws UsernameNotFoundException {
-
-        ClientEntity clientEntity = clientRepo.findByClientName(clientName);
+    public UserDetails loadUserByUsername(String clientName) throws UsernameNotFoundException {
+        ClientEntity clientEntity = clientRepoImpl.findByClientName(clientName);
         if (clientEntity == null) {
             return new org.springframework.security.core.userdetails.User(
                     " ", " ", true, true, true, true,
-                    getAuthorities(Arrays.asList(
-                            roleRepo.findByName("ROLE_USER"))));
+                    getAuthorities(Arrays.asList(roleRepo.findByName("ROLE_USER"))));
         }
 
         return new org.springframework.security.core.userdetails.User(
@@ -46,7 +43,6 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> getAuthorities(
             Collection<RoleEntity> roleEntities) {
-
         return getGrantedAuthorities(getPrivileges(roleEntities));
     }
 

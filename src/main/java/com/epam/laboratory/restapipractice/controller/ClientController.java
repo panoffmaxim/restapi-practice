@@ -50,11 +50,11 @@ public class ClientController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(produces = APPLICATION_JSON_VALUE)
-    @Operation(summary = "Заказы клиента", description = "Возвращает доступные заказы клиента по его ID")
+    @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Заказы клиента", description = "Возвращает список клиентов")
     public ResponseEntity<?> getAllClients() {
-        final List<ClientEntity> orders = clientService.getAllClients();
-        return orders != null
+        final List<ClientEntity> clients = clientService.getAllClients();
+        return clients != null
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

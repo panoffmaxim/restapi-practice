@@ -2,8 +2,6 @@ package com.epam.laboratory.restapipractice.persistence;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
-import com.epam.laboratory.restapipractice.entity.PrivilegeEntity;
-import com.epam.laboratory.restapipractice.entity.RoleEntity;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -32,8 +30,6 @@ public class HibernateUtil {
                 configuration.setProperties(settings);
                 configuration.addAnnotatedClass(ClientEntity.class);
                 configuration.addAnnotatedClass(OrderEntity.class);
-                configuration.addAnnotatedClass(RoleEntity.class);
-                configuration.addAnnotatedClass(PrivilegeEntity.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

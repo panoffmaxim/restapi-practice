@@ -23,9 +23,6 @@ public class ClientRepoImpl implements ClientRepo {
             session.get(ClientEntity.class, (Serializable) object);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             e.printStackTrace();
         }
         return client;
@@ -40,7 +37,6 @@ public class ClientRepoImpl implements ClientRepo {
             Query query = session.createQuery(hql);
             query.setParameter("clientName", client.getClientName());
             query.setParameter("clientId", 1);
-            int result = query.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -61,7 +57,6 @@ public class ClientRepoImpl implements ClientRepo {
                 String hql = "DELETE FROM ClientEntity " + "WHERE id = :clientId";
                 Query query = session.createQuery(hql);
                 query.setParameter("clientId", id);
-                int result = query.executeUpdate();
             }
             transaction.commit();
         } catch (Exception e) {

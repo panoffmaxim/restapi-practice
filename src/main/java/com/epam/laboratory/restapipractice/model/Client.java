@@ -4,7 +4,6 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Schema(description = "Модель клиента")
 public class Client {

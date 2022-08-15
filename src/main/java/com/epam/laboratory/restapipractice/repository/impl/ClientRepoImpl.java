@@ -88,7 +88,7 @@ public class ClientRepoImpl implements ClientRepo {
     @Override
     public List<ClientEntity> findAllClients() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from ClientEntity", ClientEntity.class).list();
+            return session.createQuery("FROM ClientEntity", ClientEntity.class).list();
         }
     }
 

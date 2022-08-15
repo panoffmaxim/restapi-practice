@@ -6,12 +6,14 @@ public class Order {
     private Long id;
     private String clientName;
     private Boolean completed;
+    private String deliveryInf;
 
     public static Order toModel(OrderEntity entity) {
         Order model = new Order();
         model.setId(entity.getId());
         model.setCompleted(entity.getCompleted());
         model.setClientName(entity.getClientName());
+        model.setDeliveryInf(entity.getDeliveryInf());
         return model;
     }
 
@@ -40,5 +42,13 @@ public class Order {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public String getDeliveryInf() {
+        return deliveryInf;
+    }
+
+    public void setDeliveryInf(String deliveryInf) {
+        this.deliveryInf = deliveryInf;
     }
 }

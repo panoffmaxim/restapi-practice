@@ -31,8 +31,6 @@ public class OrderService {
     }
 
     public List<OrderEntity> getAllOrders() {
-        List<OrderEntity> orders = new ArrayList<>();
-        orderRepoImpl.findAllOrders().forEach(orders::add);
-        return orders;
+        return orderRepoImpl.findAllOrders();
     }
 }

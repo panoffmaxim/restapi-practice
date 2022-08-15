@@ -50,7 +50,7 @@ public class OrderRepoImpl implements OrderRepo {
     @Override
     public List<OrderEntity> findAllOrders() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from OrderEntity ", OrderEntity.class).list();
+            return session.createQuery("FROM OrderEntity ", OrderEntity.class).list();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.epam.laboratory.restapipractice.controller;
 
+import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
@@ -38,6 +39,7 @@ public class ClientController {
 
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
+    @LogInvocation
     public ResponseEntity create(@RequestBody ClientEntity client) {
         clientService.registration(client);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -45,6 +47,7 @@ public class ClientController {
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
+    @LogInvocation
     public ResponseEntity read(@PathVariable(name = "id") Long id) {
         final Client client = clientService.getClient(id);
         LOGGER.info("Controller: Fetching user with id {}", id);
@@ -55,12 +58,13 @@ public class ClientController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
+    @LogInvocation
     public ResponseEntity<ClientsListResponse> getAllClients() {
-        final List<ClientEntity> clients = clientService.getAllClients(); /*получаем список всех клиентов из репозитория через энтити*/
+        final List<ClientEntity> clients = clientService.getAllClients();
         if (clients == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        final ClientsListResponse clientsListResponse = new ClientsListResponse( /*создаем объект класса КлиентЛистРеспонс в котором прописан список респонс клиентов */
+        final ClientsListResponse clientsListResponse = new ClientsListResponse(
                 clients.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
                                 clientEntity.getClientName(),
                                 clientEntity.getOrders().stream()
@@ -75,6 +79,7 @@ public class ClientController {
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Обновление данных клиента", description = "Обновляет клиента с заданным ID")
+    @LogInvocation
     public ResponseEntity<?> update(@PathVariable(name = "id") Long id, @RequestBody ClientEntity client) {
         final boolean updated = clientService.updateClient(client);
         return updated
@@ -84,6 +89,7 @@ public class ClientController {
 
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
+    @LogInvocation
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
         final boolean deleted = clientService.deleteClient(id);
         return deleted
@@ -93,6 +99,7 @@ public class ClientController {
 
     @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание нового экземпляра RestTemplate", description = "Возвращает ответ от внешнего API посредством RestTemplate")
+    @LogInvocation
     public RandomResponse randomResponse(@RequestParam(value = "service", required = false, defaultValue = "math") String service) {
         RestTemplate restTemplate = new RestTemplate();
         String resultTemplate = restTemplate.getForObject(apiUrl, String.class);

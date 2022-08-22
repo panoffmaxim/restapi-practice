@@ -22,7 +22,7 @@ public class ClientEntity {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "client")
     @Schema(description = "Список заказов клиента")
     @Column(name = "orders")
     private List<OrderEntity> orders;

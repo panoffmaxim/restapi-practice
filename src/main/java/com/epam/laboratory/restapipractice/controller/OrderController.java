@@ -1,5 +1,6 @@
 package com.epam.laboratory.restapipractice.controller;
 
+import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.response.OrderListResponse;
 import com.epam.laboratory.restapipractice.response.OrderResponse;
@@ -24,6 +25,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @LogInvocation
     public ResponseEntity createOrder(@RequestBody OrderEntity order,
                                       @RequestParam Long clientId) {
         try {
@@ -34,6 +36,7 @@ public class OrderController {
     }
 
     @PutMapping
+    @LogInvocation
     public ResponseEntity completeOrder(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(orderService.completedOrder(id));
@@ -49,6 +52,7 @@ public class OrderController {
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
+    @LogInvocation
     public ResponseEntity<OrderListResponse> getAllOrders() {
         final List<OrderEntity> orders = orderService.getAllOrders();
         if (orders == null) {

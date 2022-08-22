@@ -18,7 +18,7 @@ public class OrderEntity {
     @Column(name = "payment_method")
     private String paymentMethod;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 

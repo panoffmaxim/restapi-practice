@@ -2,7 +2,6 @@ package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
@@ -11,13 +10,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -26,6 +28,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/clients")
 @Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
 public class ClientController {
+    @Autowired
+    MessageSource messageSource;
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final String apiUrl;
     private static final String template = "%s";
@@ -48,12 +52,13 @@ public class ClientController {
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     @LogInvocation
-    public ResponseEntity read(@PathVariable(name = "id") Long id) {
-        final Client client = clientService.getClient(id);
+    public ResponseEntity read(@PathVariable(name = "id") Long id, Locale locale) {
         LOGGER.info("Controller: Fetching user with id {}", id);
-        return client != null
-                ? new ResponseEntity<>(client, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            return ResponseEntity.ok(clientService.getClient(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(messageSource.getMessage("error.notfound", null, locale));
+        }
     }
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)

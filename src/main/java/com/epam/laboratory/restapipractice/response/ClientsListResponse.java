@@ -1,7 +1,10 @@
 package com.epam.laboratory.restapipractice.response;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
+
 import java.util.List;
 
+@ClientBean
 public class ClientsListResponse {
     private final List<ClientResponse> clients;
 

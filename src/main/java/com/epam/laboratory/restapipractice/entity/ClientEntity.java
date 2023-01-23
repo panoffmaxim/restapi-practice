@@ -1,5 +1,6 @@
 package com.epam.laboratory.restapipractice.entity;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
+@ClientBean
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

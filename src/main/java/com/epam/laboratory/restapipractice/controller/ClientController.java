@@ -1,5 +1,6 @@
 package com.epam.laboratory.restapipractice.controller;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
@@ -27,6 +28,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/clients")
 @Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
+@ClientBean
 public class ClientController {
     @Autowired
     MessageSource messageSource;

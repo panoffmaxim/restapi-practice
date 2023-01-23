@@ -1,5 +1,6 @@
 package com.epam.laboratory.restapipractice.repository.impl;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.persistence.HibernateUtil;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Repository
+@ClientBean
 public class ClientRepoImpl implements ClientRepo {
     @Override
     public ClientEntity saveClient(ClientEntity client) {

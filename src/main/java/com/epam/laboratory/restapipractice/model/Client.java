@@ -1,11 +1,13 @@
 package com.epam.laboratory.restapipractice.model;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
 @Schema(description = "Модель клиента")
+@ClientBean
 public class Client {
     @Schema(description = "Идентификатор", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;

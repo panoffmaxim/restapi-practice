@@ -2,6 +2,8 @@ package com.epam.laboratory.restapipractice.entity;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
 @ClientBean
+@RedisHash("Client")
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +21,7 @@ public class ClientEntity {
 
     @Schema(description = "ФИО", example = "Иванов Иван Иванович")
     @Column(name = "clientName")
-    private String clientName;
+    @Indexed private String clientName;
 
     @Schema(description = "Телефон клиента")
     @Column(name = "phone")

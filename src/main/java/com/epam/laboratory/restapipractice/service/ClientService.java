@@ -15,6 +15,9 @@ public class ClientService {
     @Autowired
     private ClientRepoImpl clientRepoImpl;
 
+    @Autowired
+    private ClientCacheService clientCacheService;
+
     public ClientEntity registration(ClientEntity client) {
         return clientRepoImpl.saveClient(client);
     }
@@ -40,6 +43,6 @@ public class ClientService {
     }
 
     public List<ClientEntity> getAllClients() {
-        return clientRepoImpl.findAllClients();
+        return clientCacheService.getAllClientsFromCache();
     }
 }

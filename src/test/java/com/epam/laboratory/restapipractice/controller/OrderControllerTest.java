@@ -25,7 +25,7 @@ public class OrderControllerTest {
 //        OrderController orderController = new OrderController(orderService);
         Mockito.when(orderService.getAllOrders()).thenReturn(null);
         var response = orderController.getAllOrders();
-        Mockito.verify(orderController.getAllOrders());
+        Mockito.verify(orderService, Mockito.times(1)).getAllOrders();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

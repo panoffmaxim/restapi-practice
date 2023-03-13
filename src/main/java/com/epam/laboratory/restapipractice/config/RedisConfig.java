@@ -1,5 +1,7 @@
 package com.epam.laboratory.restapipractice.config;
 
+import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,19 +16,22 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @EnableRedisRepositories(basePackages = "com.epam.laboratory.restapipractice.repository")
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
-
+    @Value("${spring.redis.host}")
+    private String host;
+    @Value("${spring.redis.port}")
+    private Integer port;
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory jedisConFactory
                 = new JedisConnectionFactory();
-        jedisConFactory.setHostName("localhost");
-        jedisConFactory.setPort(6379);
+        jedisConFactory.setHostName(host);
+        jedisConFactory.setPort(port);
         return jedisConFactory;
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+    public RedisTemplate<String, CachedClientListResponse> redisTemplate() {
+        final RedisTemplate<String, CachedClientListResponse> template = new RedisTemplate<String, CachedClientListResponse>();
         template.setConnectionFactory(jedisConnectionFactory());
         template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
         return template;

@@ -2,6 +2,7 @@ package com.epam.laboratory.restapipractice.repository.impl;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.repository.RedisRepository;
+import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,10 +14,10 @@ import java.util.Map;
 @Repository
 public class RedisRepositoryImpl implements RedisRepository {
     private static final String KEY = "Client";
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, CachedClientListResponse> redisTemplate;
     private HashOperations hashOperations;
     @Autowired
-    public RedisRepositoryImpl(RedisTemplate<String, Object> redisTemplate) {
+    public RedisRepositoryImpl(RedisTemplate<String, CachedClientListResponse> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
     @PostConstruct

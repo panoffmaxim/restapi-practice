@@ -4,6 +4,7 @@ import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
 import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
+import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,12 @@ public class ClientCacheService {
     private ClientRepoImpl clientRepoImpl;
     @Autowired
     private RedisRepositoryImpl redisRepositoryImpl;
-    public List<ClientEntity> getAllClientsFromCache() {
+    public List<CachedClientListResponse> getAllClientsFromCache() {//CachedClient List
         if (redisRepositoryImpl.findAllClientsFromCache() == null) {
-            redisRepositoryImpl.add(new ClientEntity());
+            redisRepositoryImpl.add((ClientEntity) clientRepoImpl.findAllClients());
             return clientRepoImpl.findAllClients();
         } else {
-            return (List<ClientEntity>) redisRepositoryImpl.findAllClientsFromCache();
+            return redisRepositoryImpl.findAllClientsFromCache();
         }
     }
 }

@@ -2,12 +2,20 @@ package com.epam.laboratory.restapipractice.service;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
+import com.epam.laboratory.restapipractice.entity.ClientEntityList;
+import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
+import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
+import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
+import com.epam.laboratory.restapipractice.response.CachedClientResponse;
+import com.epam.laboratory.restapipractice.response.ClientResponse;
+import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @ClientBean
@@ -17,6 +25,8 @@ public class ClientService {
 
     @Autowired
     private ClientCacheService clientCacheService;
+    @Autowired
+    private RedisRepositoryImpl redisRepositoryImpl;
 
     public ClientEntity registration(ClientEntity client) {
         return clientRepoImpl.saveClient(client);
@@ -42,7 +52,21 @@ public class ClientService {
         return id != null;
     }
 
-    public List<ClientEntity> getAllClients() {
-        return clientCacheService.getAllClientsFromCache();
+    public static ClientEntityList fromCachedListToEntityList(List<CachedClientResponse> cachedList) {
+        List<ClientEntity> cachedListToEntityList = cachedList.stream().map(cachedClientResponse -> new ClientEntity(cachedClientResponse.getId(),
+                        cachedClientResponse.getClientName(), cachedClientResponse.getOrders().stream()
+                        .map(cachedClientOrderResponse -> new OrderEntity(cachedClientOrderResponse.getId(),
+                                cachedClientOrderResponse.getCompleted(),
+                                cachedClientOrderResponse.getDeliveryInf()))
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+        return new ClientEntityList(cachedListToEntityList);
+    }
+    public ClientEntityList getAllClients() {
+        List<CachedClientResponse> cachedClientResponseList = (List<CachedClientResponse>) clientCacheService.getAllClientsFromCache();
+        ClientEntityList clientEntityList = fromCachedListToEntityList(cachedClientResponseList);
+        return clientEntityList;
+//        return (List<ClientEntity>) clientCacheService.getAllClientsFromCache();
+        // сделать из кэшлиста переход в энтити лист
     }
 }

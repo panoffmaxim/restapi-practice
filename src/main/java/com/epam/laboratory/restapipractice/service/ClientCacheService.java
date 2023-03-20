@@ -17,10 +17,13 @@ public class ClientCacheService {
     private ClientRepoImpl clientRepoImpl;
     @Autowired
     private RedisRepositoryImpl redisRepositoryImpl;
-    public List<CachedClientListResponse> getAllClientsFromCache() {//CachedClient List
+
+    public CachedClientListResponse getAllClientsFromCache() {
         if (redisRepositoryImpl.findAllClientsFromCache() == null) {
-            redisRepositoryImpl.add((ClientEntity) clientRepoImpl.findAllClients());
-            return clientRepoImpl.findAllClients();
+            List <ClientEntity> clientEntityList = clientRepoImpl.findAllClients();
+            CachedClientListResponse cachedClientListResponse = CachedClientListResponse.fromEntityListToCachedList(clientEntityList);
+            redisRepositoryImpl.add(cachedClientListResponse);
+            return cachedClientListResponse;
         } else {
             return redisRepositoryImpl.findAllClientsFromCache();
         }

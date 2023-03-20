@@ -35,6 +35,12 @@ public class ClientEntity {
     public ClientEntity() {
     }
 
+    public ClientEntity(Long id, String clientName, List<OrderEntity> orders) {
+        this.id = id;
+        this.clientName = clientName;
+        this.orders = orders;
+    }
+
     public Long getId() {
         return id;
     }

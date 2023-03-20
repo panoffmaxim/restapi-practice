@@ -67,21 +67,21 @@ public class ClientController {
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
     @LogInvocation
     public ResponseEntity<ClientsListResponse> getAllClients() {
-        final List<ClientEntity> clients = clientService.getAllClients();
+        final List<ClientEntity> clients = (List<ClientEntity>) clientService.getAllClients();
         if (clients == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        final ClientsListResponse clientsListResponse = new ClientsListResponse(
-                clients.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
-                                clientEntity.getClientName(),
-                                clientEntity.getOrders().stream()
-                                        .map(orderEntity -> new ClientResponse.ClientOrderResponse(orderEntity.getId(),
-                                                orderEntity.getCompleted(),
-                                                orderEntity.getDeliveryInf()))
-                                        .collect(Collectors.toList())))
-                        .collect(Collectors.toList())
-        );
-        return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
+//        final ClientsListResponse clientsListResponse = new ClientsListResponse(
+//                clients.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
+//                                clientEntity.getClientName(),
+//                                clientEntity.getOrders().stream()
+//                                        .map(orderEntity -> new ClientResponse.ClientOrderResponse(orderEntity.getId(),
+//                                                orderEntity.getCompleted(),
+//                                                orderEntity.getDeliveryInf()))
+//                                        .collect(Collectors.toList())))
+//                        .collect(Collectors.toList())
+//        );
+        return new ResponseEntity<>(/*clientsListResponse, */HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)

@@ -3,7 +3,6 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.response.ClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.service.ClientService;
@@ -19,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -67,21 +64,10 @@ public class ClientController {
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
     @LogInvocation
     public ResponseEntity<ClientsListResponse> getAllClients() {
-        final List<ClientEntity> clients = (List<ClientEntity>) clientService.getAllClients();
-        if (clients == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-//        final ClientsListResponse clientsListResponse = new ClientsListResponse(
-//                clients.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
-//                                clientEntity.getClientName(),
-//                                clientEntity.getOrders().stream()
-//                                        .map(orderEntity -> new ClientResponse.ClientOrderResponse(orderEntity.getId(),
-//                                                orderEntity.getCompleted(),
-//                                                orderEntity.getDeliveryInf()))
-//                                        .collect(Collectors.toList())))
-//                        .collect(Collectors.toList())
-//        );
-        return new ResponseEntity<>(/*clientsListResponse, */HttpStatus.OK);
+        final ClientsListResponse clientsListResponse = clientService.getAllClients();
+        return clientsListResponse != null
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)

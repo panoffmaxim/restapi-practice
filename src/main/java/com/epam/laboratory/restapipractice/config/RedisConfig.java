@@ -36,27 +36,4 @@ public class RedisConfig {
         template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
         return template;
     }
-//
-//    @Bean
-//    MessageListenerAdapter messageListener() {
-//        return new MessageListenerAdapter(new RedisMessageSubscriber());
-//    }
-//
-//    @Bean
-//    RedisMessageListenerContainer redisContainer() {
-//        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(jedisConnectionFactory());
-//        container.addMessageListener(messageListener(), topic());
-//        return container;
-//    }
-//
-//    @Bean
-//    MessagePublisher redisPublisher() {
-//        return new RedisMessagePublisher(redisTemplate(), topic());
-//    }
-//
-//    @Bean
-//    ChannelTopic topic() {
-//        return new ChannelTopic("pubsub:queue");
-//    }
 }

@@ -7,7 +7,6 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
 import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
-import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
@@ -62,11 +61,20 @@ public class ClientService {
                 .collect(Collectors.toList());
         return new ClientEntityList(cachedListToEntityList);
     }
-    public ClientEntityList getAllClients() {
-        List<CachedClientResponse> cachedClientResponseList = (List<CachedClientResponse>) clientCacheService.getAllClientsFromCache();
-        ClientEntityList clientEntityList = fromCachedListToEntityList(cachedClientResponseList);
-        return clientEntityList;
-//        return (List<ClientEntity>) clientCacheService.getAllClientsFromCache();
-        // сделать из кэшлиста переход в энтити лист
+
+    public ClientsListResponse getAllClients() {
+        List<CachedClientResponse> cachedClientResponseList = clientCacheService.getAllClientsFromCache().getCashedClients();
+        final List<ClientEntity> clientEntityList = fromCachedListToEntityList(cachedClientResponseList).getClientEntityList();
+        final ClientsListResponse clientsListResponse = new ClientsListResponse(
+                clientEntityList.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
+                                clientEntity.getClientName(),
+                                clientEntity.getOrders().stream()
+                                        .map(orderEntity -> new ClientResponse.ClientOrderResponse(orderEntity.getId(),
+                                                orderEntity.getCompleted(),
+                                                orderEntity.getDeliveryInf()))
+                                        .collect(Collectors.toList())))
+                        .collect(Collectors.toList())
+        );
+        return clientsListResponse;
     }
 }

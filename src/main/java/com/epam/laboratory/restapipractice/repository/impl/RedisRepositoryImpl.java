@@ -14,7 +14,7 @@ import java.util.Map;
 @Repository
 public class RedisRepositoryImpl implements RedisRepository {
     private static final String KEY = "clientList";
-    private RedisTemplate<String, CachedClientListResponse> redisTemplate;
+    private final RedisTemplate<String, CachedClientListResponse> redisTemplate;
     @Autowired
     public RedisRepositoryImpl(RedisTemplate<String, CachedClientListResponse> redisTemplate) {
         this.redisTemplate = redisTemplate;

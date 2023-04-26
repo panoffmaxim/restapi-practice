@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 @Configuration
 @ComponentScan("com.epam.laboratory.restapipractice")
@@ -17,23 +18,23 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
     @Value("${spring.redis.host}")
-    private String host;
+    private String redisHost;
     @Value("${spring.redis.port}")
-    private Integer port;
+    private Integer redisPort;
+
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory jedisConFactory
-                = new JedisConnectionFactory();
-        jedisConFactory.setHostName(host);
-        jedisConFactory.setPort(port);
-        return jedisConFactory;
+    public JedisConnectionFactory jedisConnectionFactory() {
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
+        redisConfig.setHostName(redisHost);
+        redisConfig.setPort(redisPort);
+        return new JedisConnectionFactory(redisConfig);
     }
 
     @Bean
     public RedisTemplate<String, CachedClientListResponse> redisTemplate() {
-        final RedisTemplate<String, CachedClientListResponse> template = new RedisTemplate<String, CachedClientListResponse>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
-        return template;
+        final RedisTemplate<String, CachedClientListResponse> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(CachedClientListResponse.class));
+        return redisTemplate;
     }
 }

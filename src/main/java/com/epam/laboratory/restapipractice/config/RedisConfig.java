@@ -11,6 +11,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @ComponentScan("com.epam.laboratory.restapipractice")
@@ -34,6 +35,7 @@ public class RedisConfig {
     public RedisTemplate<String, CachedClientListResponse> redisTemplate() {
         final RedisTemplate<String, CachedClientListResponse> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(CachedClientListResponse.class));
         return redisTemplate;
     }

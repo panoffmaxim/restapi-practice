@@ -3,9 +3,12 @@ package com.epam.laboratory.restapipractice.response;
 import java.util.List;
 
 public class CachedClientResponse {
-    private final Long id;
-    private final String clientName;
-    private final List<CachedClientOrderResponse> orders;
+    private Long id;
+    private String clientName;
+    private List<CachedClientOrderResponse> orders;
+
+    public CachedClientResponse() {
+    }
 
     public CachedClientResponse(final Long id, final String clientName, final List<CachedClientOrderResponse> orders) {
         this.id = id;

@@ -63,7 +63,7 @@ public class ClientService {
     }
 
     public ClientsListResponse getAllClients() {
-        List<CachedClientResponse> cachedClientResponseList = clientCacheService.getAllClientsFromCache().getCashedClients();
+        List<CachedClientResponse> cachedClientResponseList = clientCacheService.getAllClientsFromCache().getCashedClientResponseList();
         final List<ClientEntity> clientEntityList = fromCachedListToEntityList(cachedClientResponseList).getClientEntityList();
         final ClientsListResponse clientsListResponse = new ClientsListResponse(
                 clientEntityList.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),

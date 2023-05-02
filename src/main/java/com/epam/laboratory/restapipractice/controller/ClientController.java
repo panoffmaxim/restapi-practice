@@ -66,7 +66,7 @@ public class ClientController {
     public ResponseEntity<ClientsListResponse> getAllClients() {
         final ClientsListResponse clientsListResponse = clientService.getAllClients();
         return clientsListResponse != null
-                ? new ResponseEntity<>(HttpStatus.OK)
+                ? new ResponseEntity<>(clientsListResponse, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

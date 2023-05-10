@@ -20,12 +20,16 @@ public class ClientCacheService {
 
     public CachedClientListResponse getAllClientsFromCache() {
         if (redisRepositoryImpl.findAllClientsFromCache() == null) {
-            List <ClientEntity> clientEntityList = clientRepoImpl.findAllClients();
+            List<ClientEntity> clientEntityList = clientRepoImpl.findAllClients();
             CachedClientListResponse cachedClientListResponse = CachedClientListResponse.fromEntityListToCachedList(clientEntityList);
             redisRepositoryImpl.add(cachedClientListResponse);
             return cachedClientListResponse;
         } else {
             return redisRepositoryImpl.findAllClientsFromCache();
         }
+    }
+
+    public CachedClientListResponse deleteAllClientsFromCache() {
+        return redisRepositoryImpl.clearCacheByKey();
     }
 }

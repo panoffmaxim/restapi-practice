@@ -8,4 +8,6 @@ import java.util.Map;
 public interface RedisRepository {
     void add(CachedClientListResponse cachedClientListResponse);
     CachedClientListResponse findAllClientsFromCache();
+
+    CachedClientListResponse clearCacheByKey();
 }

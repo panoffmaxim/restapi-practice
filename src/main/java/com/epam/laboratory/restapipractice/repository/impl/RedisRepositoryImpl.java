@@ -15,14 +15,21 @@ import java.util.Map;
 public class RedisRepositoryImpl implements RedisRepository {
     private static final String KEY = "clientList";
     private final RedisTemplate<String, CachedClientListResponse> redisTemplate;
+
     @Autowired
     public RedisRepositoryImpl(RedisTemplate<String, CachedClientListResponse> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
     public void add(final CachedClientListResponse cachedClientListResponse) {
         redisTemplate.opsForValue().set(KEY, cachedClientListResponse);
     }
+
     public CachedClientListResponse findAllClientsFromCache() {
         return redisTemplate.opsForValue().get(KEY);
+    }
+
+    public CachedClientListResponse clearCacheByKey() {
+        return redisTemplate.opsForValue().getAndDelete(KEY);
     }
 }

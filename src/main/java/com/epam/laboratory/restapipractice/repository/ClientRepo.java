@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 @ClientBean
-public interface ClientRepo extends JpaRepository<ClientEntity, Long> {
+public interface ClientRepo extends CrudRepository<ClientEntity, Long> {
     //    ClientEntity saveClient(ClientEntity client);
 //    Boolean updateClient(ClientEntity client);
 //    Boolean deleteClientById(Long id);

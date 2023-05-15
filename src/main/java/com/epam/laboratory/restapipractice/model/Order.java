@@ -51,4 +51,14 @@ public class Order {
     public void setDeliveryInf(String deliveryInf) {
         this.deliveryInf = deliveryInf;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", clientName='" + clientName + '\'' +
+                ", completed=" + completed +
+                ", deliveryInf='" + deliveryInf + '\'' +
+                '}';
+    }
 }

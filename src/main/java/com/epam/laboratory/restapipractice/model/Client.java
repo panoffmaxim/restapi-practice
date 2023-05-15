@@ -5,6 +5,7 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "Модель клиента")
 @ClientBean
@@ -22,7 +23,7 @@ public class Client {
         Client model = new Client();
         model.setId(entity.getId());
         model.setClientName(entity.getClientName());
-//        model.setOrders(entity.getOrders().stream().map(Order::toModel).collect(Collectors.toList()));
+        model.setOrders(entity.getOrders().stream().map(Order::toModel).collect(Collectors.toList()));
         return model;
     }
 
@@ -51,5 +52,14 @@ public class Client {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", clientName='" + clientName + '\'' +
+                ", orders=" + orders +
+                '}';
     }
 }

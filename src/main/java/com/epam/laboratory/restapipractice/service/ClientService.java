@@ -5,7 +5,8 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.ClientEntityList;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
-import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
+import com.epam.laboratory.restapipractice.model.Order;
+import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
@@ -19,35 +20,67 @@ import java.util.stream.Collectors;
 @Service
 @ClientBean
 public class ClientService {
-    @Autowired
-    private ClientRepoImpl clientRepoImpl;
+//    @Autowired
+//    private ClientRepoImpl clientRepoImpl;
 
     @Autowired
     private ClientCacheService clientCacheService;
     @Autowired
     private RedisRepositoryImpl redisRepositoryImpl;
 
+//    public ClientEntity registration(ClientEntity client) {
+//        return clientRepoImpl.saveClient(client);
+//    }
+//
+//    public Client getClient(Long id) {
+//        ClientEntity client = clientRepoImpl.findClientById(id);
+//        return Client.toModel(client);
+//    }
+//
+////    public List<Order> findClientOrders(Long id) {
+////        ClientEntity client = clientRepo.findClientById(id).get();
+////        return Client.toModel(client).getOrders();
+////    }
+//
+//    public Boolean updateClient(ClientEntity client) {
+//        clientRepoImpl.updateClient(client);
+//        return true;
+//    }
+//
+//    public Boolean deleteClient(Long id) {
+//        clientRepoImpl.deleteClientById(id);
+//        return id != null;
+//    }
+
+    @Autowired
+    private ClientRepo clientRepo;
+
+
     public ClientEntity registration(ClientEntity client) {
-        return clientRepoImpl.saveClient(client);
+        return clientRepo.save(client);
     }
 
     public Client getClient(Long id) {
-        ClientEntity client = clientRepoImpl.findClientById(id);
+        ClientEntity client = clientRepo.findById(id).get();
         return Client.toModel(client);
     }
 
-//    public List<Order> findClientOrders(Long id) {
-//        ClientEntity client = clientRepo.findClientById(id).get();
-//        return Client.toModel(client).getOrders();
-//    }
+    public List<Order> findClientOrders(Long id) {
+        ClientEntity client = clientRepo.findById(id).get();
+        return Client.toModel(client).getOrders();
+    }
 
     public Boolean updateClient(ClientEntity client) {
-        clientRepoImpl.updateClient(client);
-        return true;
+//        if (clientRepo.findById(id).equals(id)) {
+//            client.setId(id);
+//            clientRepo.save(client);
+//            return true;
+//        }
+        return clientRepo.save(client) != null;
     }
 
     public Boolean deleteClient(Long id) {
-        clientRepoImpl.deleteClientById(id);
+        clientRepo.deleteById(id);
         return id != null;
     }
 

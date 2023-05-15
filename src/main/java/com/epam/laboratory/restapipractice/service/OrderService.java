@@ -3,8 +3,8 @@ package com.epam.laboratory.restapipractice.service;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Order;
-import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
-import com.epam.laboratory.restapipractice.repository.impl.OrderRepoImpl;
+import com.epam.laboratory.restapipractice.repository.ClientRepo;
+import com.epam.laboratory.restapipractice.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,23 +14,45 @@ import java.util.List;
 @Service
 public class OrderService {
     @Autowired
-    private OrderRepoImpl orderRepoImpl;
+    private OrderRepo orderRepo;
     @Autowired
-    private ClientRepoImpl clientRepoImpl;
+    private ClientRepo clientRepo;
 
     public Order createOrder(OrderEntity order, Long clientId) {
-        ClientEntity client = clientRepoImpl.findClientById(clientId);
+        ClientEntity client = clientRepo.findById(clientId).get();
         order.setClient(client);
-        return Order.toModel(orderRepoImpl.saveOrder(order));
-    }
-
-    public Order completedOrder(Long id) {
-        OrderEntity order = orderRepoImpl.findOrderById(id);
-        order.setCompleted(!order.getCompleted());
-        return Order.toModel(orderRepoImpl.saveOrder(order));
+        return Order.toModel(orderRepo.save(order));
     }
 
     public List<OrderEntity> getAllOrders() {
-        return orderRepoImpl.findAllOrders();
+        List<OrderEntity> orders = new ArrayList<>();
+        orderRepo.findAll().forEach(orders::add);
+        return orders;
     }
+
+    public Order completedOrder(Long id) {
+        OrderEntity order = orderRepo.findById(id).get();
+        order.setCompleted(!order.getCompleted());
+        return Order.toModel(orderRepo.save(order));
+    }
+//    @Autowired
+//    private OrderRepoImpl orderRepoImpl;
+//    @Autowired
+//    private ClientRepoImpl clientRepoImpl;
+//
+//    public Order createOrder(OrderEntity order, Long clientId) {
+//        ClientEntity client = clientRepoImpl.findClientById(clientId);
+//        order.setClient(client);
+//        return Order.toModel(orderRepoImpl.saveOrder(order));
+//    }
+//
+//    public Order completedOrder(Long id) {
+//        OrderEntity order = orderRepoImpl.findOrderById(id);
+//        order.setCompleted(!order.getCompleted());
+//        return Order.toModel(orderRepoImpl.saveOrder(order));
+//    }
+//
+//    public List<OrderEntity> getAllOrders() {
+//        return orderRepoImpl.findAllOrders();
+//    }
 }

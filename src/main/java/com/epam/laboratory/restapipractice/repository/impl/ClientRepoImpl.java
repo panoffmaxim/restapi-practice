@@ -56,9 +56,10 @@ public class ClientRepoImpl implements ClientRepo {
             transaction = session.beginTransaction();
             ClientEntity client = session.get(ClientEntity.class, id);
             if (client != null) {
-                String hql = "DELETE FROM ClientEntity " + "WHERE id = :clientId";
+                String hql = "DELETE FROM ClientEntity WHERE id = :clientId";
                 Query query = session.createQuery(hql);
                 query.setParameter("clientId", id);
+                query.executeUpdate();
             }
             transaction.commit();
         } catch (Exception e) {

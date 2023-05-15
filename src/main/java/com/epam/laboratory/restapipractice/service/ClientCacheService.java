@@ -8,7 +8,10 @@ import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @ClientBean
@@ -20,7 +23,8 @@ public class ClientCacheService {
 
     public CachedClientListResponse getAllClientsFromCache() {
         if (redisRepositoryImpl.findAllClientsFromCache() == null) {
-            List<ClientEntity> clientEntityList = clientRepo.findAll();
+            List<ClientEntity> clientEntityList = StreamSupport.stream(clientRepo.findAll().spliterator(), false)
+                    .collect(Collectors.toList());
             CachedClientListResponse cachedClientListResponse = CachedClientListResponse.fromEntityListToCachedList(clientEntityList);
             redisRepositoryImpl.add(cachedClientListResponse);
             return cachedClientListResponse;

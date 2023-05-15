@@ -48,9 +48,8 @@ public class ClientController {
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     @LogInvocation
     public ResponseEntity create(@RequestBody ClientEntity client) {
-        clientCacheService.deleteAllClientsFromCache();
         clientService.registration(client);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -89,10 +88,10 @@ public class ClientController {
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     @LogInvocation
     public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        clientCacheService.deleteAllClientsFromCache();
+        LOGGER.info("Controller: Deleting user with id {}", id);
         final boolean deleted = clientService.deleteClient(id);
         return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
+                ? new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 

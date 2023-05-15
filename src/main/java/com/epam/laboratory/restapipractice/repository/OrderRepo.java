@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface OrderRepo extends JpaRepository<OrderEntity, Long> {
+public interface OrderRepo extends CrudRepository<OrderEntity, Long> {
 //    OrderEntity saveOrder(OrderEntity order);
 //    OrderEntity findOrderById(Long id);
 //    List<OrderEntity> findAllOrders();

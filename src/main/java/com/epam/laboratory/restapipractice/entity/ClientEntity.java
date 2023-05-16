@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
 @ClientBean
-@RedisHash("Client")
+//@RedisHash("Client")
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class ClientEntity {
     private Long id;
 
     @Schema(description = "ФИО", example = "Иванов Иван Иванович")
-    @Indexed private String clientName;
+    private String clientName;
 
     @Schema(description = "Телефон клиента")
     private String phone;

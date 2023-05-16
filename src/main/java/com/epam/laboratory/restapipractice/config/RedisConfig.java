@@ -15,7 +15,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @ComponentScan("com.epam.laboratory.restapipractice")
-@EnableRedisRepositories(basePackages = "com.epam.laboratory.restapipractice.repository")
+//@EnableRedisRepositories(basePackages = "com.epam.laboratory.restapipractice.redis")
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
     @Value("${spring.redis.host}")

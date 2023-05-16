@@ -7,7 +7,7 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
 import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
-import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
+import com.epam.laboratory.restapipractice.redis.impl.RedisRepositoryImpl;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;

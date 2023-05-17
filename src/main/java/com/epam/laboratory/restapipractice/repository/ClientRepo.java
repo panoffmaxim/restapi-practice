@@ -9,7 +9,7 @@ import java.util.List;
 public interface ClientRepo {
     ClientEntity saveClient(ClientEntity client);
     Boolean updateClient(ClientEntity client);
-    Boolean deleteClientById(Long id);
+    void deleteClientById(Long id);
     ClientEntity findClientById(Long id);
     List<ClientEntity> findAllClients();
     ClientEntity findByClientName(String clientName);

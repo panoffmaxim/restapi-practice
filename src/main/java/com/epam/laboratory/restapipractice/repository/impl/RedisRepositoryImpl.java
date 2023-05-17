@@ -29,7 +29,7 @@ public class RedisRepositoryImpl implements RedisRepository {
         return redisTemplate.opsForValue().get(KEY);
     }
 
-    public CachedClientListResponse clearCacheByKey() {
-        return redisTemplate.opsForValue().getAndDelete(KEY);
+    public void clearCacheByKey() {
+        redisTemplate.opsForValue().getAndDelete(KEY);
     }
 }

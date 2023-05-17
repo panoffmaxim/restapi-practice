@@ -47,9 +47,10 @@ public class ClientController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     @LogInvocation
-    public ResponseEntity create(@RequestBody ClientEntity client) {
+    public ResponseEntity<ClientEntity> create(@RequestBody ClientEntity client) {
         clientService.registration(client);
-        return new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.CREATED);
+        clientCacheService.deleteAllClientsFromCache();
+        return new ResponseEntity<ClientEntity>(HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -87,12 +88,11 @@ public class ClientController {
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     @LogInvocation
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         LOGGER.info("Controller: Deleting user with id {}", id);
-        final boolean deleted = clientService.deleteClient(id);
-        return deleted
-                ? new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        clientService.deleteClient(id);
+        clientCacheService.deleteAllClientsFromCache();
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)

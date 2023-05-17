@@ -29,7 +29,7 @@ public class ClientCacheService {
         }
     }
 
-    public CachedClientListResponse deleteAllClientsFromCache() {
-        return redisRepositoryImpl.clearCacheByKey();
+    public void deleteAllClientsFromCache() {
+        redisRepositoryImpl.clearCacheByKey();
     }
 }

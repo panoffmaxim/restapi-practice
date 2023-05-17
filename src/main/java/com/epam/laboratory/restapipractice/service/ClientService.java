@@ -46,9 +46,8 @@ public class ClientService {
         return true;
     }
 
-    public Boolean deleteClient(Long id) {
+    public void deleteClient(Long id) {
         clientRepoImpl.deleteClientById(id);
-        return id != null;
     }
 
     public static ClientEntityList fromCachedListToEntityList(List<CachedClientResponse> cachedList) {

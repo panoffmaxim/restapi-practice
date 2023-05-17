@@ -9,5 +9,5 @@ public interface RedisRepository {
     void add(CachedClientListResponse cachedClientListResponse);
     CachedClientListResponse findAllClientsFromCache();
 
-    CachedClientListResponse clearCacheByKey();
+    void clearCacheByKey();
 }

@@ -50,7 +50,7 @@ public class ClientRepoImpl implements ClientRepo {
     }
 
     @Override
-    public Boolean deleteClientById(Long id) {
+    public void deleteClientById(Long id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -68,7 +68,6 @@ public class ClientRepoImpl implements ClientRepo {
             }
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override

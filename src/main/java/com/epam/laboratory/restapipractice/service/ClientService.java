@@ -5,6 +5,7 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.ClientEntityList;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
+import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
 import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @ClientBean
 public class ClientService {
     @Autowired
-    private ClientRepoImpl clientRepoImpl;
+    private ClientRepo clientRepo;
 
     @Autowired
     private ClientCacheService clientCacheService;
@@ -28,26 +29,21 @@ public class ClientService {
     private RedisRepositoryImpl redisRepositoryImpl;
 
     public ClientEntity registration(ClientEntity client) {
-        return clientRepoImpl.saveClient(client);
+        return clientRepo.saveClient(client);
     }
 
     public Client getClient(Long id) {
-        ClientEntity client = clientRepoImpl.findClientById(id);
+        ClientEntity client = clientRepo.findClientById(id);
         return Client.toModel(client);
     }
 
-//    public List<Order> findClientOrders(Long id) {
-//        ClientEntity client = clientRepo.findClientById(id).get();
-//        return Client.toModel(client).getOrders();
-//    }
-
     public Boolean updateClient(ClientEntity client) {
-        clientRepoImpl.updateClient(client);
+        clientRepo.updateClient(client);
         return true;
     }
 
     public void deleteClient(Long id) {
-        clientRepoImpl.deleteClientById(id);
+        clientRepo.deleteClientById(id);
     }
 
     public static ClientEntityList fromCachedListToEntityList(List<CachedClientResponse> cachedList) {

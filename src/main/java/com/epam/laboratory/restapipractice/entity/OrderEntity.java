@@ -8,14 +8,10 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "clientName")
     private String clientName;
 
-    @Column(name = "completed")
     private Boolean completed;
-    @Column(name = "deliveryInf")
     private String deliveryInf;
-    @Column(name = "payment_method")
     private String paymentMethod;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -77,5 +73,17 @@ public class OrderEntity {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", clientName='" + clientName + '\'' +
+                ", completed=" + completed +
+                ", deliveryInf='" + deliveryInf + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", client=" + client +
+                '}';
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "client")
 @Schema(description = "Сущность клиента")
 @ClientBean
-@RedisHash("Client")
+//@RedisHash("Client")
 public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +20,13 @@ public class ClientEntity {
     private Long id;
 
     @Schema(description = "ФИО", example = "Иванов Иван Иванович")
-    @Column(name = "clientName")
-    @Indexed private String clientName;
+    private String clientName;
 
     @Schema(description = "Телефон клиента")
-    @Column(name = "phone")
     private String phone;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "client")
     @Schema(description = "Список заказов клиента")
-    @Column(name = "orders")
     private List<OrderEntity> orders;
 
     public ClientEntity() {
@@ -71,5 +68,15 @@ public class ClientEntity {
 
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientEntity{" +
+                "id=" + id +
+                ", clientName='" + clientName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", orders=" + orders +
+                '}';
     }
 }

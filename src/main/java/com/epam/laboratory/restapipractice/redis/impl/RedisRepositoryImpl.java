@@ -1,15 +1,10 @@
-package com.epam.laboratory.restapipractice.repository.impl;
+package com.epam.laboratory.restapipractice.redis.impl;
 
-import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.repository.RedisRepository;
+import com.epam.laboratory.restapipractice.redis.RedisRepository;
 import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
-import java.util.Map;
 
 @Repository
 public class RedisRepositoryImpl implements RedisRepository {
@@ -29,7 +24,7 @@ public class RedisRepositoryImpl implements RedisRepository {
         return redisTemplate.opsForValue().get(KEY);
     }
 
-    public void clearCacheByKey() {
-        redisTemplate.opsForValue().getAndDelete(KEY);
+    public CachedClientListResponse clearCacheByKey() {
+        return redisTemplate.opsForValue().getAndDelete(KEY);
     }
 }

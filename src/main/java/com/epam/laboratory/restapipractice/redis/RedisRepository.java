@@ -1,4 +1,4 @@
-package com.epam.laboratory.restapipractice.repository;
+package com.epam.laboratory.restapipractice.redis;
 
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
@@ -9,5 +9,5 @@ public interface RedisRepository {
     void add(CachedClientListResponse cachedClientListResponse);
     CachedClientListResponse findAllClientsFromCache();
 
-    void clearCacheByKey();
+    CachedClientListResponse clearCacheByKey();
 }

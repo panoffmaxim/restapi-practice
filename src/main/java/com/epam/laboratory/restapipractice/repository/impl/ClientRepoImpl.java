@@ -50,15 +50,16 @@ public class ClientRepoImpl implements ClientRepo {
     }
 
     @Override
-    public Boolean deleteClientById(Long id) {
+    public void deleteClientById(Long id) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             ClientEntity client = session.get(ClientEntity.class, id);
             if (client != null) {
-                String hql = "DELETE FROM ClientEntity " + "WHERE id = :clientId";
+                String hql = "DELETE FROM ClientEntity WHERE id = :clientId";
                 Query query = session.createQuery(hql);
                 query.setParameter("clientId", id);
+                query.executeUpdate();
             }
             transaction.commit();
         } catch (Exception e) {
@@ -67,7 +68,6 @@ public class ClientRepoImpl implements ClientRepo {
             }
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override

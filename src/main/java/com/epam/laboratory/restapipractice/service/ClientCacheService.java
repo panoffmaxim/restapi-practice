@@ -4,6 +4,7 @@ import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.repository.impl.ClientRepoImpl;
 import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
+import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,19 @@ public class ClientCacheService {
     private ClientRepoImpl clientRepoImpl;
     @Autowired
     private RedisRepositoryImpl redisRepositoryImpl;
-    public List<ClientEntity> getAllClientsFromCache() {
+
+    public CachedClientListResponse getAllClientsFromCache() {
         if (redisRepositoryImpl.findAllClientsFromCache() == null) {
-            redisRepositoryImpl.add(new ClientEntity());
-            return clientRepoImpl.findAllClients();
+            List<ClientEntity> clientEntityList = clientRepoImpl.findAllClients();
+            CachedClientListResponse cachedClientListResponse = CachedClientListResponse.fromEntityListToCachedList(clientEntityList);
+            redisRepositoryImpl.add(cachedClientListResponse);
+            return cachedClientListResponse;
         } else {
-            return (List<ClientEntity>) redisRepositoryImpl.findAllClientsFromCache();
+            return redisRepositoryImpl.findAllClientsFromCache();
         }
+    }
+
+    public void deleteAllClientsFromCache() {
+        redisRepositoryImpl.clearCacheByKey();
     }
 }

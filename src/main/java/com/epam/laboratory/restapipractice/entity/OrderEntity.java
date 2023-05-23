@@ -25,6 +25,12 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
+    public OrderEntity(Long id, Boolean completed, String deliveryInf) {
+        this.id = id;
+        this.completed = completed;
+        this.deliveryInf = deliveryInf;
+    }
+
     public Long getId() {
         return id;
     }

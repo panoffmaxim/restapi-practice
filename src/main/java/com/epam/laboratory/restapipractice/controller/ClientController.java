@@ -3,9 +3,10 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.response.ClientResponse;
+import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
+import com.epam.laboratory.restapipractice.service.ClientCacheService;
 import com.epam.laboratory.restapipractice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -32,6 +31,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class ClientController {
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    private ClientCacheService clientCacheService;
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final String apiUrl;
     private static final String template = "%s";
@@ -46,9 +47,14 @@ public class ClientController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     @LogInvocation
-    public ResponseEntity create(@RequestBody ClientEntity client) {
-        clientService.registration(client);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ClientEntity> create(@RequestBody ClientEntity client) {
+        try {
+            ClientEntity registeredClient = clientService.registration(client);
+            clientCacheService.deleteAllClientsFromCache();
+            return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -67,21 +73,10 @@ public class ClientController {
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
     @LogInvocation
     public ResponseEntity<ClientsListResponse> getAllClients() {
-        final List<ClientEntity> clients = clientService.getAllClients();
-        if (clients == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        final ClientsListResponse clientsListResponse = new ClientsListResponse(
-                clients.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
-                                clientEntity.getClientName(),
-                                clientEntity.getOrders().stream()
-                                        .map(orderEntity -> new ClientResponse.ClientOrderResponse(orderEntity.getId(),
-                                                orderEntity.getCompleted(),
-                                                orderEntity.getDeliveryInf()))
-                                        .collect(Collectors.toList())))
-                        .collect(Collectors.toList())
-        );
-        return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
+        final ClientsListResponse clientsListResponse = clientService.getAllClients();
+        return clientsListResponse != null
+                ? new ResponseEntity<>(clientsListResponse, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -97,11 +92,19 @@ public class ClientController {
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     @LogInvocation
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
-        final boolean deleted = clientService.deleteClient(id);
-        return deleted
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
+        LOGGER.info("Controller: Deleting user with id {}", id);
+//        final boolean deleted = clientService.deleteClient(id);
+//        if (deleted) {
+//            clientCacheService.deleteAllClientsFromCache();
+//        }
+        try {
+            clientService.deleteClient(id);
+            clientCacheService.deleteAllClientsFromCache();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
     }
 
     @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)

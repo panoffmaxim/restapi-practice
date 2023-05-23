@@ -3,6 +3,7 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
+import com.epam.laboratory.restapipractice.repository.impl.RedisRepositoryImpl;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.service.ClientCacheService;
@@ -46,9 +47,14 @@ public class ClientController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     @LogInvocation
-    public ResponseEntity create(@RequestBody ClientEntity client) {
-        clientService.registration(client);
-        return new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.CREATED);
+    public ResponseEntity<ClientEntity> create(@RequestBody ClientEntity client) {
+        try {
+            ClientEntity registeredClient = clientService.registration(client);
+            clientCacheService.deleteAllClientsFromCache();
+            return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -86,12 +92,19 @@ public class ClientController {
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     @LogInvocation
-    public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         LOGGER.info("Controller: Deleting user with id {}", id);
-        final boolean deleted = clientService.deleteClient(id);
-        return deleted
-                ? new ResponseEntity<>(clientCacheService.deleteAllClientsFromCache(), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+//        final boolean deleted = clientService.deleteClient(id);
+//        if (deleted) {
+//            clientCacheService.deleteAllClientsFromCache();
+//        }
+        try {
+            clientService.deleteClient(id);
+            clientCacheService.deleteAllClientsFromCache();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
     }
 
     @GetMapping(value = "/random", produces = APPLICATION_JSON_VALUE)

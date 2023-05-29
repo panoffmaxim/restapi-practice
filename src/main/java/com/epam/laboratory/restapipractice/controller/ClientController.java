@@ -35,7 +35,6 @@ public class ClientController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final String apiUrl;
     private static final String template = "%s";
-
     private final ClientService clientService;
 
     public ClientController(ClientService clientService, @Value("${apiUrl.value}") String apiUrl) {
@@ -93,10 +92,6 @@ public class ClientController {
     @LogInvocation
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         LOGGER.info("Controller: Deleting user with id {}", id);
-//        final boolean deleted = clientService.deleteClient(id);
-//        if (deleted) {
-//            clientCacheService.deleteAllClientsFromCache();
-//        }
         try {
             clientService.deleteClient(id);
             clientCacheService.deleteAllClientsFromCache();

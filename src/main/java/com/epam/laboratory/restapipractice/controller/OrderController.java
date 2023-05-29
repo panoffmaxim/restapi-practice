@@ -45,11 +45,6 @@ public class OrderController {
         }
     }
 
-//    @GetMapping
-//    public ResponseEntity getAllOrders() {
-//        return ResponseEntity.ok(orderService.getAllOrders());
-//    }
-
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation

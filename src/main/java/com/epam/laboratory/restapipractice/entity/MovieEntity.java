@@ -7,7 +7,7 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 public class MovieEntity {
-    @NotEmpty (message = "Title can not be empty")
+    @NotEmpty(message = "Title can not be empty")
     private String title;
 
     @Past

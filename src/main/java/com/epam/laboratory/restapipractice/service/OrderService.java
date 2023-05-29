@@ -19,7 +19,7 @@ public class OrderService {
     private ClientRepo clientRepo;
 
     public Order createOrder(OrderEntity order, Long clientId) {
-        ClientEntity client = clientRepo.findById(clientId).get();
+        ClientEntity client = clientRepo.findById(clientId).orElseThrow();
         order.setClient(client);
         return Order.toModel(orderRepo.save(order));
     }
@@ -31,28 +31,8 @@ public class OrderService {
     }
 
     public Order completedOrder(Long id) {
-        OrderEntity order = orderRepo.findById(id).get();
+        OrderEntity order = orderRepo.findById(id).orElseThrow();
         order.setCompleted(!order.getCompleted());
         return Order.toModel(orderRepo.save(order));
     }
-//    @Autowired
-//    private OrderRepoImpl orderRepoImpl;
-//    @Autowired
-//    private ClientRepoImpl clientRepoImpl;
-//
-//    public Order createOrder(OrderEntity order, Long clientId) {
-//        ClientEntity client = clientRepoImpl.findClientById(clientId);
-//        order.setClient(client);
-//        return Order.toModel(orderRepoImpl.saveOrder(order));
-//    }
-//
-//    public Order completedOrder(Long id) {
-//        OrderEntity order = orderRepoImpl.findOrderById(id);
-//        order.setCompleted(!order.getCompleted());
-//        return Order.toModel(orderRepoImpl.saveOrder(order));
-//    }
-//
-//    public List<OrderEntity> getAllOrders() {
-//        return orderRepoImpl.findAllOrders();
-//    }
 }

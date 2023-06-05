@@ -22,7 +22,6 @@ public class OrderControllerTest {
 
     @Test
     void shouldReturnNotFoundIfOrderServiceReturnNull() {
-//        OrderController orderController = new OrderController(orderService);
         Mockito.when(orderService.getAllOrders()).thenReturn(null);
         var response = orderController.getAllOrders();
         Mockito.verify(orderService, Mockito.times(1)).getAllOrders();

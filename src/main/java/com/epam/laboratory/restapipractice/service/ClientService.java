@@ -5,7 +5,6 @@ import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.ClientEntityList;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.model.Client;
-import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
@@ -24,8 +23,9 @@ public class ClientService {
     @Autowired
     private ClientRepo clientRepo;
 
-    public ClientEntity registration(ClientEntity client) {
-        return clientRepo.save(client);
+    public Client registration(ClientEntity client) {
+        ClientEntity savedClient = clientRepo.save(client);
+        return Client.toModel(savedClient);
     }
 
     public Client getClient(Long id) {
@@ -33,13 +33,12 @@ public class ClientService {
             return Client.toModel(client);
     }
 
-    public List<Order> findClientOrders(Long id) {
-            ClientEntity client = clientRepo.findById(id).orElseThrow();
-            return Client.toModel(client).getOrders();
-    }
-
-    public Boolean updateClient(ClientEntity client) {
-        return clientRepo.save(client) != null;
+    public ClientEntity updateClient(ClientEntity client) {
+        ClientEntity existingClient = clientRepo.findById(client.getId()).orElseThrow();
+        existingClient.setClientName(client.getClientName());
+        existingClient.setPhone(client.getPhone());
+        existingClient.setOrders(client.getOrders());
+        return clientRepo.save(existingClient);
     }
 
     public void deleteClient(Long id) {
@@ -60,7 +59,7 @@ public class ClientService {
     public ClientsListResponse getAllClients() {
         List<CachedClientResponse> cachedClientResponseList = clientCacheService.getAllClientsFromCache().getCashedClientResponseList();
         final List<ClientEntity> clientEntityList = fromCachedListToEntityList(cachedClientResponseList).getClientEntityList();
-        final ClientsListResponse clientsListResponse = new ClientsListResponse(
+        return new ClientsListResponse(
                 clientEntityList.stream().map(clientEntity -> new ClientResponse(clientEntity.getId(),
                                 clientEntity.getClientName(),
                                 clientEntity.getOrders().stream()
@@ -70,6 +69,5 @@ public class ClientService {
                                         .collect(Collectors.toList())))
                         .collect(Collectors.toList())
         );
-        return clientsListResponse;
     }
 }

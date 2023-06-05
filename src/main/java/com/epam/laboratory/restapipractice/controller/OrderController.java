@@ -2,6 +2,7 @@ package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
+import com.epam.laboratory.restapipractice.model.Order;
 import com.epam.laboratory.restapipractice.response.OrderListResponse;
 import com.epam.laboratory.restapipractice.response.OrderResponse;
 import com.epam.laboratory.restapipractice.service.OrderService;
@@ -26,22 +27,24 @@ public class OrderController {
 
     @PostMapping
     @LogInvocation
-    public ResponseEntity createOrder(@RequestBody OrderEntity order,
-                                      @RequestParam Long clientId) {
+    public ResponseEntity<Order> createOrder(@RequestBody OrderEntity order,
+                                             @RequestParam Long clientId) {
         try {
-            return ResponseEntity.ok(orderService.createOrder(order, clientId));
+            Order createdOrder = orderService.createOrder(order, clientId);
+            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping
     @LogInvocation
-    public ResponseEntity completeOrder(@RequestParam Long id) {
+    public ResponseEntity<Order> completeOrder(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(orderService.completedOrder(id));
+            Order completedOrder = orderService.completedOrder(id);
+            return new ResponseEntity<>(completedOrder, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

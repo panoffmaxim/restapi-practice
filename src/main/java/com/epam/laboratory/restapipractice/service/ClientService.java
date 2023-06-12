@@ -1,10 +1,11 @@
 package com.epam.laboratory.restapipractice.service;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
+import com.epam.laboratory.restapipractice.dto.ClientDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.ClientEntityList;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
-import com.epam.laboratory.restapipractice.model.Client;
+import com.epam.laboratory.restapipractice.mapper.ClientMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
 import com.epam.laboratory.restapipractice.response.ClientResponse;
@@ -22,23 +23,25 @@ public class ClientService {
     private ClientCacheService clientCacheService;
     @Autowired
     private ClientRepo clientRepo;
+    @Autowired
+    private ClientMapper clientMapper;
 
-    public Client registration(ClientEntity client) {
-        ClientEntity savedClient = clientRepo.save(client);
-        return Client.toModel(savedClient);
+    public ClientDto registration(ClientDto clientDto) {
+        return clientMapper.toDto(clientRepo.save(clientMapper.toEntity(clientDto)));
     }
 
-    public Client getClient(Long id) {
-            ClientEntity client = clientRepo.findById(id).orElseThrow();
-            return Client.toModel(client);
+    public ClientDto getClient(Long id) {
+            return clientMapper.toDto(clientRepo.findById(id).orElseThrow());
     }
 
-    public ClientEntity updateClient(ClientEntity client) {
-        ClientEntity existingClient = clientRepo.findById(client.getId()).orElseThrow();
-        existingClient.setClientName(client.getClientName());
-        existingClient.setPhone(client.getPhone());
-        existingClient.setOrders(client.getOrders());
-        return clientRepo.save(existingClient);
+    public ClientDto updateClient(ClientDto clientDto) {
+        ClientEntity clientEntity = clientMapper.toEntity(clientDto);
+        ClientEntity existingClient = clientRepo.findById(clientEntity.getId()).orElseThrow();
+        existingClient.setClientName(clientEntity.getClientName());
+        existingClient.setPhone(clientEntity.getPhone());
+        existingClient.setOrders(clientEntity.getOrders());
+        ClientEntity updatedClient = clientRepo.save(existingClient);
+        return clientMapper.toDto(updatedClient);
     }
 
     public void deleteClient(Long id) {

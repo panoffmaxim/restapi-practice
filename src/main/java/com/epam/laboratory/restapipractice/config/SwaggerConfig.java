@@ -13,7 +13,6 @@ import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
-
     @Bean
     public OpenAPI customOpenApi(@Value("${application-description}") String appDescription,
                                  @Value("${application-version}") String appVersion) {

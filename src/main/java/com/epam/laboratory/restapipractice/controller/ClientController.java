@@ -2,7 +2,8 @@ package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
-import com.epam.laboratory.restapipractice.dto.ClientDto;
+import com.epam.laboratory.restapipractice.dto.ClientRequestDto;
+import com.epam.laboratory.restapipractice.dto.ClientResponseDto;
 import com.epam.laboratory.restapipractice.response.ClientsListResponse;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.service.ClientCacheService;
@@ -43,9 +44,9 @@ public class ClientController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Создание клиента", description = "Позволяет создать нового клиента")
     @LogInvocation
-    public ResponseEntity<ClientDto> create(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<ClientResponseDto> create(@RequestBody ClientRequestDto clientRequestDto) {
         try {
-            ClientDto registeredClient = clientService.registration(clientDto);
+            ClientResponseDto registeredClient = clientService.registration(clientRequestDto);
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -56,10 +57,10 @@ public class ClientController {
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     @LogInvocation
-    public ResponseEntity<ClientDto> read(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ClientResponseDto> read(@PathVariable(name = "id") Long id) {
         LOGGER.info("Controller: Fetching user with id {}", id);
-        ClientDto clientDto = clientService.getClient(id);
-        return new ResponseEntity<>(clientDto, HttpStatus.OK);
+        ClientResponseDto clientResponseDto = clientService.getClient(id);
+        return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
     }
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
@@ -75,8 +76,8 @@ public class ClientController {
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Обновление данных клиента", description = "Обновляет клиента с заданным ID")
     @LogInvocation
-    public ResponseEntity<ClientDto> update(@PathVariable(name = "id") Long id, @RequestBody ClientDto clientDto) {
-        ClientDto updatedClient = clientService.updateClient(clientDto);
+    public ResponseEntity<ClientResponseDto> update(@PathVariable(name = "id") Long id, @RequestBody ClientRequestDto clientRequestDto) {
+        ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
         return new ResponseEntity<>(updatedClient, HttpStatus.OK);
     }
 

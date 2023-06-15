@@ -1,6 +1,7 @@
 package com.epam.laboratory.restapipractice.mapper;
 
-import com.epam.laboratory.restapipractice.dto.ClientDto;
+import com.epam.laboratory.restapipractice.dto.ClientRequestDto;
+import com.epam.laboratory.restapipractice.dto.ClientResponseDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,11 @@ public class ClientMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ClientEntity toEntity(ClientDto clientDto) {
-        return Objects.isNull(clientDto) ? null : modelMapper.map(clientDto, ClientEntity.class);
+    public ClientEntity toEntity(ClientRequestDto clientRequestDto) {
+        return Objects.isNull(clientRequestDto) ? null : modelMapper.map(clientRequestDto, ClientEntity.class);
     }
 
-    public ClientDto toDto(ClientEntity clientEntity) {
-        return Objects.isNull(clientEntity) ? null : modelMapper.map(clientEntity, ClientDto.class);
+    public ClientResponseDto toDto(ClientEntity clientEntity) {
+        return Objects.isNull(clientEntity) ? null : modelMapper.map(clientEntity, ClientResponseDto.class);
     }
 }

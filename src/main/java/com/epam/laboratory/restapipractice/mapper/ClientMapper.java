@@ -14,11 +14,11 @@ public class ClientMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ClientEntity toEntity(ClientRequestDto clientRequestDto) {
+    public ClientEntity ClientToEntity(ClientRequestDto clientRequestDto) {
         return Objects.isNull(clientRequestDto) ? null : modelMapper.map(clientRequestDto, ClientEntity.class);
     }
 
-    public ClientResponseDto toDto(ClientEntity clientEntity) {
+    public ClientResponseDto ClientToDto(ClientEntity clientEntity) {
         return Objects.isNull(clientEntity) ? null : modelMapper.map(clientEntity, ClientResponseDto.class);
     }
 }

@@ -50,6 +50,7 @@ public class ClientController {
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -58,39 +59,53 @@ public class ClientController {
     @Operation(summary = "Нахождение клиента", description = "Возвращает клиента по его ID")
     @LogInvocation
     public ResponseEntity<ClientResponseDto> read(@PathVariable(name = "id") Long id) {
-        LOGGER.info("Controller: Fetching user with id {}", id);
-        ClientResponseDto clientResponseDto = clientService.getClient(id);
-        return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
+        try {
+            LOGGER.info("Controller: Fetching user with id {}", id);
+            ClientResponseDto clientResponseDto = clientService.getClient(id);
+            return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
     @LogInvocation
     public ResponseEntity<ClientsListResponse> getAllClients() {
-        final ClientsListResponse clientsListResponse = clientService.getAllClients();
-        return clientsListResponse != null
-                ? new ResponseEntity<>(clientsListResponse, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            final ClientsListResponse clientsListResponse = clientService.getAllClients();
+            return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Обновление данных клиента", description = "Обновляет клиента с заданным ID")
     @LogInvocation
     public ResponseEntity<ClientResponseDto> update(@PathVariable(name = "id") Long id, @RequestBody ClientRequestDto clientRequestDto) {
-        ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
-        return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+        try {
+            ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
+            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
     }
 
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Удаление клиента", description = "Удаляет клиента с заданным ID")
     @LogInvocation
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        LOGGER.info("Controller: Deleting user with id {}", id);
         try {
+            LOGGER.info("Controller: Deleting user with id {}", id);
             clientService.deleteClient(id);
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }

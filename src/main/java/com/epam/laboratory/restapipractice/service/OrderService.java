@@ -1,8 +1,10 @@
 package com.epam.laboratory.restapipractice.service;
 
+import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
+import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
-import com.epam.laboratory.restapipractice.model.Order;
+import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,14 @@ public class OrderService {
     private OrderRepo orderRepo;
     @Autowired
     private ClientRepo clientRepo;
+    @Autowired
+    private OrderMapper orderMapper;
 
-    public Order createOrder(OrderEntity order, Long clientId) {
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long clientId) {
         ClientEntity client = clientRepo.findById(clientId).orElseThrow();
-        order.setClient(client);
-        return Order.toModel(orderRepo.save(order));
+        OrderEntity orderEntity = orderMapper.OrderToEntity(orderRequestDto);
+        orderEntity.setClient(client);
+        return orderMapper.OrderToDto(orderRepo.save(orderEntity));
     }
 
     public List<OrderEntity> getAllOrders() {
@@ -30,9 +35,9 @@ public class OrderService {
         return orders;
     }
 
-    public Order completedOrder(Long id) {
-        OrderEntity order = orderRepo.findById(id).orElseThrow();
-        order.setCompleted(!order.getCompleted());
-        return Order.toModel(orderRepo.save(order));
+    public OrderResponseDto completedOrder(Long id) {
+        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
+        orderEntity.setCompleted(!orderEntity.getCompleted());
+        return orderMapper.OrderToDto(orderRepo.save(orderEntity));
     }
 }

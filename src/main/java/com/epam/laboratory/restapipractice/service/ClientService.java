@@ -28,21 +28,21 @@ public class ClientService {
     private ClientMapper clientMapper;
 
     public ClientResponseDto registration(ClientRequestDto clientRequestDto) {
-        return clientMapper.ClientToDto(clientRepo.save(clientMapper.ClientToEntity(clientRequestDto)));
+        return clientMapper.clientToDto(clientRepo.save(clientMapper.clientToEntity(clientRequestDto)));
     }
 
     public ClientResponseDto getClient(Long id) {
-        return clientMapper.ClientToDto(clientRepo.findById(id).orElseThrow());
+        return clientMapper.clientToDto(clientRepo.findById(id).orElseThrow());
     }
 
     public ClientResponseDto updateClient(ClientRequestDto clientRequestDto) {
-        ClientEntity clientEntity = clientMapper.ClientToEntity(clientRequestDto);
+        ClientEntity clientEntity = clientMapper.clientToEntity(clientRequestDto);
         ClientEntity existingClient = clientRepo.findById(clientEntity.getId()).orElseThrow();
         existingClient.setClientName(clientEntity.getClientName());
         existingClient.setPhone(clientEntity.getPhone());
         existingClient.setOrders(clientEntity.getOrders());
         ClientEntity updatedClient = clientRepo.save(existingClient);
-        return clientMapper.ClientToDto(updatedClient);
+        return clientMapper.clientToDto(updatedClient);
     }
 
     public void deleteClient(Long id) {

@@ -50,8 +50,8 @@ public class ClientController {
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            LOGGER.error("Error creating client", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,8 +64,8 @@ public class ClientController {
             ClientResponseDto clientResponseDto = clientService.getClient(id);
             return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            LOGGER.error("Error reading client", e);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -77,7 +77,7 @@ public class ClientController {
             final ClientsListResponse clientsListResponse = clientService.getAllClients();
             return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Error getting all clients", e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -90,7 +90,7 @@ public class ClientController {
             ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Error updating client", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
@@ -105,7 +105,7 @@ public class ClientController {
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error("Error deleting client", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }

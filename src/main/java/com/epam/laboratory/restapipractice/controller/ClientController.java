@@ -65,7 +65,7 @@ public class ClientController {
             return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error reading client", e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,7 +78,7 @@ public class ClientController {
             return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all clients", e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -91,7 +91,7 @@ public class ClientController {
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error updating client", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,7 +106,7 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error deleting client", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

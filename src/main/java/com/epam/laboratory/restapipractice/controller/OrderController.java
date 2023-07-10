@@ -44,7 +44,7 @@ public class OrderController {
             return new ResponseEntity<>(completedOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error completing order", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -55,7 +55,7 @@ public class OrderController {
         try {
             final OrderListResponse orderListResponse = orderService.getAllOrders();
             if (orderListResponse == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>(orderListResponse, HttpStatus.OK);
         } catch (Exception e) {

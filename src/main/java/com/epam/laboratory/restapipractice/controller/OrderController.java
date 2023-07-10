@@ -24,12 +24,27 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    //    @PostMapping
+//    @LogInvocation
+//    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto, @RequestParam Long clientId) {
+//        try {
+//            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId);
+//            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            LOGGER.error("Error creating order", e);
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+    @PostMapping("/create")
     @LogInvocation
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto, @RequestParam Long clientId) {
+    public ResponseEntity<OrderResponseDto> createOrder(
+            @RequestBody OrderRequestDto orderRequestDto,
+            @RequestHeader(value = "Accept-Timezone", required = false) String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone,
+            @RequestHeader(value = "Client-Id") Long clientId) {
         try {
-            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId);
-            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId, acceptLanguage, acceptTimezone);
+            return new ResponseEntity<>(createdOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error creating order", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

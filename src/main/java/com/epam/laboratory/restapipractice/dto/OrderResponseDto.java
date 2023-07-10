@@ -4,6 +4,7 @@ public class OrderResponseDto {
     private Long id;
     private String clientName;
     private Boolean completed;
+    private String creationDateTime;
 
     public OrderResponseDto() {
     }
@@ -36,5 +37,13 @@ public class OrderResponseDto {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public String getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(String creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 }

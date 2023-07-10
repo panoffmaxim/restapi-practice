@@ -12,6 +12,7 @@ public class OrderEntity {
     private Boolean completed;
     private String deliveryInf;
     private String paymentMethod;
+    private String creationDateTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
@@ -72,6 +73,14 @@ public class OrderEntity {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(String creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 
     @Override

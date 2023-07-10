@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -19,8 +20,8 @@ import static org.junit.Assert.assertEquals;
 public class ClientControllerTest {
     private static final String RANDOMAPI_PATH = "/random";
 
-    private WireMockServer wireMockServer = new WireMockServer();
-    private CloseableHttpClient httpClient = HttpClients.createDefault();
+    private final WireMockServer wireMockServer = new WireMockServer();
+    private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
     @Test
     public void callExternalAPI_returnsCorrect() throws IOException {
@@ -41,7 +42,7 @@ public class ClientControllerTest {
 
     private static String convertResponseToString(HttpResponse response) throws IOException {
         InputStream responseStream = response.getEntity().getContent();
-        Scanner scanner = new Scanner(responseStream, "UTF-8");
+        Scanner scanner = new Scanner(responseStream, StandardCharsets.UTF_8);
         String stringResponse = scanner.useDelimiter("\\Z").next();
         scanner.close();
         return stringResponse;

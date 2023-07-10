@@ -9,7 +9,6 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String clientName;
-
     private Boolean completed;
     private String deliveryInf;
     private String paymentMethod;

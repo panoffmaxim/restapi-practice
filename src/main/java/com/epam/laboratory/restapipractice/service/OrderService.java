@@ -1,10 +1,13 @@
 package com.epam.laboratory.restapipractice.service;
 
+import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
+import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
-import com.epam.laboratory.restapipractice.model.Order;
+import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
+import com.epam.laboratory.restapipractice.response.OrderListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,42 +20,26 @@ public class OrderService {
     private OrderRepo orderRepo;
     @Autowired
     private ClientRepo clientRepo;
+    @Autowired
+    private OrderMapper orderMapper;
 
-    public Order createOrder(OrderEntity order, Long clientId) {
-        ClientEntity client = clientRepo.findById(clientId).get();
-        order.setClient(client);
-        return Order.toModel(orderRepo.save(order));
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long clientId) {
+        ClientEntity client = clientRepo.findById(clientId).orElseThrow();
+        OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
+        orderEntity.setClient(client);
+        return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
 
-    public List<OrderEntity> getAllOrders() {
+    public OrderListResponse getAllOrders() {
         List<OrderEntity> orders = new ArrayList<>();
         orderRepo.findAll().forEach(orders::add);
-        return orders;
+        OrderListResponse orderListResponse = orderMapper.orderToListResponse(orders);
+        return orderListResponse;
     }
 
-    public Order completedOrder(Long id) {
-        OrderEntity order = orderRepo.findById(id).get();
-        order.setCompleted(!order.getCompleted());
-        return Order.toModel(orderRepo.save(order));
+    public OrderResponseDto completeOrder(Long id) {
+        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
+        orderEntity.setCompleted(true);
+        return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
-//    @Autowired
-//    private OrderRepoImpl orderRepoImpl;
-//    @Autowired
-//    private ClientRepoImpl clientRepoImpl;
-//
-//    public Order createOrder(OrderEntity order, Long clientId) {
-//        ClientEntity client = clientRepoImpl.findClientById(clientId);
-//        order.setClient(client);
-//        return Order.toModel(orderRepoImpl.saveOrder(order));
-//    }
-//
-//    public Order completedOrder(Long id) {
-//        OrderEntity order = orderRepoImpl.findOrderById(id);
-//        order.setCompleted(!order.getCompleted());
-//        return Order.toModel(orderRepoImpl.saveOrder(order));
-//    }
-//
-//    public List<OrderEntity> getAllOrders() {
-//        return orderRepoImpl.findAllOrders();
-//    }
 }

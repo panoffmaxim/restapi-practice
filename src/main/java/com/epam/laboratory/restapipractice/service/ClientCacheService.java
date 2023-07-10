@@ -2,8 +2,8 @@ package com.epam.laboratory.restapipractice.service;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
-import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.redis.impl.RedisRepositoryImpl;
+import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.response.CachedClientListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

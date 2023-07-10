@@ -9,5 +9,4 @@ class RestapiPracticeApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

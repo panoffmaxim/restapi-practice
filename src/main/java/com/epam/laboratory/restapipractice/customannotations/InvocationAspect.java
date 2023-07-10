@@ -14,13 +14,13 @@ public class InvocationAspect {
     private final static Logger LOGGER = LoggerFactory.getLogger(InvocationAspect.class.getName());
 
     @Before("@annotation(com.epam.laboratory.restapipractice.customannotations.LogInvocation)")
-    public void logBeforeMethod(JoinPoint jp) throws Throwable {
+    public void logBeforeMethod(JoinPoint jp) {
         String methodName = jp.getSignature().getName();
         LOGGER.info("Calling " + methodName);
     }
 
     @After("@annotation(com.epam.laboratory.restapipractice.customannotations.LogInvocation)")
-    public void logAfterMethod(JoinPoint jp) throws Throwable {
+    public void logAfterMethod(JoinPoint jp) {
         String methodName = jp.getSignature().getName();
         LOGGER.info(methodName + " completed");
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -44,11 +45,12 @@ public class OrderService {
         } else {
             currentDateTime = ZonedDateTime.now(serverZoneId);
         }
-        String formattedDateTime = formatZonedDateTime(currentDateTime, acceptLanguage);
+        ZonedDateTime formattedDateTime = formatZonedDateTime(currentDateTime, acceptLanguage);
+        LocalDateTime creationDateTime = formattedDateTime.toLocalDateTime();
 
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
 
-        orderEntity.setCreationDateTime(formattedDateTime);
+        orderEntity.setCreationDateTime(creationDateTime);
         orderEntity.setClient(client);
         OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
         orderResponseDto.setCreationDateTime(orderEntity.getCreationDateTime());
@@ -68,9 +70,9 @@ public class OrderService {
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
 
-    private String formatZonedDateTime(ZonedDateTime zonedDateTime, String acceptLanguage) {
+    private ZonedDateTime formatZonedDateTime(ZonedDateTime zonedDateTime, String acceptLanguage) {
         Locale locale = Locale.forLanguageTag(acceptLanguage);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss 'GMT'Z", locale);
-        return zonedDateTime.format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss z").withLocale(locale);
+        return ZonedDateTime.parse(zonedDateTime.format(formatter));
     }
 }

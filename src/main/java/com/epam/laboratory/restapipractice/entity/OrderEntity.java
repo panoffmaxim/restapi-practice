@@ -1,6 +1,7 @@
 package com.epam.laboratory.restapipractice.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -12,7 +13,7 @@ public class OrderEntity {
     private Boolean completed;
     private String deliveryInf;
     private String paymentMethod;
-    private String creationDateTime;
+    private LocalDateTime creationDateTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
@@ -75,11 +76,11 @@ public class OrderEntity {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(String creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 

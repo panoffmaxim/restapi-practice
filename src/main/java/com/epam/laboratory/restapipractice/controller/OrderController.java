@@ -24,12 +24,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @LogInvocation
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto, @RequestParam Long clientId) {
+    public ResponseEntity<OrderResponseDto> createOrder(
+            @RequestBody OrderRequestDto orderRequestDto,
+            @RequestParam Long clientId,
+            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
         try {
-            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId);
-            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId, acceptLanguage, acceptTimezone);
+            return new ResponseEntity<>(createdOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error creating order", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -44,7 +48,7 @@ public class OrderController {
             return new ResponseEntity<>(completedOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error completing order", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
 
@@ -55,7 +59,7 @@ public class OrderController {
         try {
             final OrderListResponse orderListResponse = orderService.getAllOrders();
             if (orderListResponse == null) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(orderListResponse, HttpStatus.OK);
         } catch (Exception e) {

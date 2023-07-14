@@ -1,0 +1,4 @@
+# ALTER TABLE orders ADD creation_datetime DATETIME DEFAULT CONVERT_TZ(NOW(), @@session.time_zone, '+00:00');
+# ALTER TABLE orders ADD COLUMN creation_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE orders ADD COLUMN creation_datetime DATETIME DEFAULT CURRENT_TIMESTAMP;
+# ALTER TABLE orders ADD COLUMN creation_datetime DATETIME;

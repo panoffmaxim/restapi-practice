@@ -8,26 +8,53 @@ import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
 import com.epam.laboratory.restapipractice.response.OrderListResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Service
 public class OrderService {
-    @Autowired
-    private OrderRepo orderRepo;
-    @Autowired
-    private ClientRepo clientRepo;
-    @Autowired
-    private OrderMapper orderMapper;
+    private final OrderRepo orderRepo;
+    private final ClientRepo clientRepo;
+    private final OrderMapper orderMapper;
+    private final ZoneId serverZoneId;
 
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long clientId) {
-        ClientEntity client = clientRepo.findById(clientId).orElseThrow();
+    public OrderService(OrderRepo orderRepo, ClientRepo clientRepo, OrderMapper orderMapper) {
+        this.orderRepo = orderRepo;
+        this.clientRepo = clientRepo;
+        this.orderMapper = orderMapper;
+        this.serverZoneId = ZoneId.systemDefault();
+    }
+
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long clientId, String acceptLanguage, String acceptTimezone) {
+        ClientEntity client = clientRepo.findById(clientId).orElseThrow(() -> new EntityNotFoundException("Client not found"));
+
+        ZonedDateTime currentDateTime;
+        if (acceptTimezone != null && !acceptTimezone.isEmpty()) {
+            ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+            currentDateTime = ZonedDateTime.now(clientZoneId);
+        } else {
+            currentDateTime = ZonedDateTime.now(serverZoneId);
+        }
+        ZonedDateTime formattedDateTime = formatZonedDateTime(currentDateTime, acceptLanguage);
+        LocalDateTime creationDateTime = formattedDateTime.toLocalDateTime();
+
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
+
+        orderEntity.setCreationDateTime(creationDateTime);
         orderEntity.setClient(client);
-        return orderMapper.orderToDto(orderRepo.save(orderEntity));
+        OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
+        orderResponseDto.setCreationDateTime(orderEntity.getCreationDateTime());
+        return orderResponseDto;
     }
 
     public OrderListResponse getAllOrders() {
@@ -41,5 +68,11 @@ public class OrderService {
         OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
         orderEntity.setCompleted(true);
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
+    }
+
+    private ZonedDateTime formatZonedDateTime(ZonedDateTime zonedDateTime, String acceptLanguage) {
+        Locale locale = Locale.forLanguageTag(acceptLanguage);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss z").withLocale(locale);
+        return ZonedDateTime.parse(zonedDateTime.format(formatter));
     }
 }

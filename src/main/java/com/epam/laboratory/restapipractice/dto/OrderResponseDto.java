@@ -1,9 +1,12 @@
 package com.epam.laboratory.restapipractice.dto;
 
+import java.time.LocalDateTime;
+
 public class OrderResponseDto {
     private Long id;
     private String clientName;
     private Boolean completed;
+    private LocalDateTime creationDateTime;
 
     public OrderResponseDto() {
     }
@@ -36,5 +39,13 @@ public class OrderResponseDto {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public LocalDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 }

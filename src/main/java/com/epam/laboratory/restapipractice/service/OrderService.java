@@ -7,18 +7,16 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
-import com.epam.laboratory.restapipractice.response.OrderListResponse;
+import com.epam.laboratory.restapipractice.dto.OrderListResponseDto;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 @Service
@@ -40,28 +38,27 @@ public class OrderService {
 
         ZonedDateTime currentDateTime;
         if (acceptTimezone != null && !acceptTimezone.isEmpty()) {
-            ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+            ZoneId clientZoneId = ZoneId.of("UTC+0");
             currentDateTime = ZonedDateTime.now(clientZoneId);
         } else {
             currentDateTime = ZonedDateTime.now(serverZoneId);
         }
-        ZonedDateTime formattedDateTime = formatZonedDateTime(currentDateTime, acceptLanguage);
-        LocalDateTime creationDateTime = formattedDateTime.toLocalDateTime();
+        LocalDateTime creationDateTime = currentDateTime.toLocalDateTime();
 
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
 
         orderEntity.setCreationDateTime(creationDateTime);
         orderEntity.setClient(client);
         OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
-        orderResponseDto.setCreationDateTime(orderEntity.getCreationDateTime());
+        String responseDateTime = formatLocalDateTime(creationDateTime, acceptLanguage);
+        orderResponseDto.setCreationDateTime(responseDateTime);
         return orderResponseDto;
     }
 
-    public OrderListResponse getAllOrders() {
+    public OrderListResponseDto getAllOrders() {
         List<OrderEntity> orders = new ArrayList<>();
         orderRepo.findAll().forEach(orders::add);
-        OrderListResponse orderListResponse = orderMapper.orderToListResponse(orders);
-        return orderListResponse;
+        return orderMapper.orderToListResponse(orders);
     }
 
     public OrderResponseDto completeOrder(Long id) {
@@ -70,9 +67,9 @@ public class OrderService {
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
 
-    private ZonedDateTime formatZonedDateTime(ZonedDateTime zonedDateTime, String acceptLanguage) {
+    private String formatLocalDateTime(LocalDateTime localDateTime, String acceptLanguage) {
         Locale locale = Locale.forLanguageTag(acceptLanguage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss z").withLocale(locale);
-        return ZonedDateTime.parse(zonedDateTime.format(formatter));
+        return localDateTime.format(formatter);
     }
 }

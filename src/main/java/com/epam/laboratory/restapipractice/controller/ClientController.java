@@ -4,7 +4,7 @@ import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.dto.ClientRequestDto;
 import com.epam.laboratory.restapipractice.dto.ClientResponseDto;
-import com.epam.laboratory.restapipractice.response.ClientsListResponse;
+import com.epam.laboratory.restapipractice.dto.ClientsListResponseDto;
 import com.epam.laboratory.restapipractice.response.RandomResponse;
 import com.epam.laboratory.restapipractice.service.ClientCacheService;
 import com.epam.laboratory.restapipractice.service.ClientService;
@@ -72,10 +72,10 @@ public class ClientController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Клиенты", description = "Возвращает список клиентов")
     @LogInvocation
-    public ResponseEntity<ClientsListResponse> getAllClients() {
+    public ResponseEntity<ClientsListResponseDto> getAllClients() {
         try {
-            final ClientsListResponse clientsListResponse = clientService.getAllClients();
-            return new ResponseEntity<>(clientsListResponse, HttpStatus.OK);
+            final ClientsListResponseDto clientsListResponseDto = clientService.getAllClients();
+            return new ResponseEntity<>(clientsListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all clients", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

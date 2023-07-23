@@ -1,40 +1,54 @@
 package com.epam.laboratory.restapipractice.dto;
 
+import com.epam.laboratory.restapipractice.customannotations.ClientBean;
+
+import java.util.List;
+
+@ClientBean
 public class ClientResponseDto {
-    private Long id;
-    private String clientName;
-    private String phone;
+    private final Long id;
+    private final String clientName;
+    private final List<ClientOrderResponse> orders;
 
-    public ClientResponseDto() {
-    }
-
-    public ClientResponseDto(Long id, String clientName, String phone) {
+    public ClientResponseDto(final Long id, final String clientName, final List<ClientOrderResponse> orders) {
         this.id = id;
         this.clientName = clientName;
-        this.phone = phone;
+        this.orders = orders;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getClientName() {
         return clientName;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public List<ClientOrderResponse> getOrders() {
+        return orders;
     }
 
-    public String getPhone() {
-        return phone;
-    }
+    public static class ClientOrderResponse {
+        private final Long id;
+        private final Boolean completed;
+        private final String deliveryInf;
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+        public ClientOrderResponse(final Long id, final Boolean completed, final String deliveryInf) {
+            this.id = id;
+            this.completed = completed;
+            this.deliveryInf = deliveryInf;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public Boolean getCompleted() {
+            return completed;
+        }
+
+        public String getDeliveryInf() {
+            return deliveryInf;
+        }
     }
 }

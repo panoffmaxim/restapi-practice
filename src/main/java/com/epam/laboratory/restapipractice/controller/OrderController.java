@@ -3,7 +3,7 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
-import com.epam.laboratory.restapipractice.response.OrderListResponse;
+import com.epam.laboratory.restapipractice.dto.OrderListResponseDto;
 import com.epam.laboratory.restapipractice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -55,13 +55,10 @@ public class OrderController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation
-    public ResponseEntity<OrderListResponse> getAllOrders() {
+    public ResponseEntity<OrderListResponseDto> getAllOrders() {
         try {
-            final OrderListResponse orderListResponse = orderService.getAllOrders();
-            if (orderListResponse == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(orderListResponse, HttpStatus.OK);
+            final OrderListResponseDto orderListResponseDto = orderService.getAllOrders();
+            return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all orders", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

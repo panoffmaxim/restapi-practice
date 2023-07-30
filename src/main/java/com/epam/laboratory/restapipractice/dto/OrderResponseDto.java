@@ -3,15 +3,17 @@ package com.epam.laboratory.restapipractice.dto;
 public class OrderResponseDto {
     private Long id;
     private String clientName;
+    private Long clientId;
     private Boolean completed;
     private String creationDateTime;
 
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(Long id, String clientName, Boolean completed, String creationDateTime) {
+    public OrderResponseDto(Long id, String clientName, Long clientId, Boolean completed, String creationDateTime) {
         this.id = id;
         this.clientName = clientName;
+        this.clientId = clientId;
         this.completed = completed;
         this.creationDateTime = creationDateTime;
     }
@@ -30,6 +32,14 @@ public class OrderResponseDto {
 
     public void setClientName(String clientName) {
         this.clientName = clientName;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public Boolean getCompleted() {

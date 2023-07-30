@@ -18,7 +18,7 @@ CREATE TABLE orders (
                       clientName varchar(64) not null,
                       deliveryInf varchar(64) not null,
                       completed BOOLEAN NOT NULL,
-                      client_id BIGINT,
-                      FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+                      clientId BIGINT,
+                      FOREIGN KEY (`clientId`) REFERENCES `client` (`id`),
                       PRIMARY KEY (id)
 ) engine=MyISAM;

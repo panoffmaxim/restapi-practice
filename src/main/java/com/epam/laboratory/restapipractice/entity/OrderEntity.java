@@ -16,7 +16,7 @@ public class OrderEntity {
     private LocalDateTime creationDateTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "clientId")
     private ClientEntity client;
 
     public OrderEntity() {

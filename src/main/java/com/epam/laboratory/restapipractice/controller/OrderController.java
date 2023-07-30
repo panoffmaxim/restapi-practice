@@ -28,11 +28,10 @@ public class OrderController {
     @LogInvocation
     public ResponseEntity<OrderResponseDto> createOrder(
             @RequestBody OrderRequestDto orderRequestDto,
-            @RequestParam Long clientId,
             @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
             @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
         try {
-            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId, acceptLanguage, acceptTimezone);
+            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(createdOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error creating order", e);

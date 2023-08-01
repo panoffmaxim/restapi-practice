@@ -8,9 +8,9 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
+import org.modelmapper.AbstractProvider;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.Provider;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -31,7 +31,7 @@ public class OrderService {
     private final ClientRepo clientRepo;
     private final OrderMapper orderMapper;
     private final ZoneId serverZoneId;
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     public OrderService(OrderRepo orderRepo, ClientRepo clientRepo, OrderMapper orderMapper, ModelMapper mapper) {
         this.orderRepo = orderRepo;
@@ -42,28 +42,29 @@ public class OrderService {
     }
 
     public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String acceptLanguage, String acceptTimezone) {
-        ZonedDateTime currentDateTime;
-        if (acceptTimezone != null && !acceptTimezone.isEmpty()) {
-            ZoneId clientZoneId = ZoneId.of(TIME_ZONE);
-            currentDateTime = ZonedDateTime.now(clientZoneId);
-        } else {
-            currentDateTime = ZonedDateTime.now(serverZoneId);
-        }
-        LocalDateTime creationDateTime = currentDateTime.toLocalDateTime();
-
         ClientEntity client = clientRepo.findById(orderRequestDto.getClientId()).orElseThrow(() -> new EntityNotFoundException("Client not found"));
 
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
-
-//        mapper.typeMap(OrderRequestDto.class, OrderEntity.class)
-//                .addMappings(m -> m.with(localDateTimeProvider)
-//                        .map(OrderRequestDto::getClientName, OrderEntity::setCreationDateTime));
-
         orderEntity.setClient(client);
-        orderEntity.setCreationDateTime(creationDateTime);
+
+        Provider<LocalDateTime> localDateTimeProvider = new AbstractProvider<>() {
+            public LocalDateTime get() {
+                ZonedDateTime currentDateTime;
+                if (acceptTimezone != null && !acceptTimezone.isEmpty()) {
+                    ZoneId clientZoneId = ZoneId.of(TIME_ZONE);
+                    currentDateTime = ZonedDateTime.now(clientZoneId);
+                } else {
+                    currentDateTime = ZonedDateTime.now(serverZoneId);
+                }
+                return currentDateTime.toLocalDateTime();
+            }
+        };
+        mapper.typeMap(OrderRequestDto.class, OrderEntity.class)
+                .addMappings(m -> m.with(localDateTimeProvider)
+                        .map(OrderRequestDto::getClientName, OrderEntity::setCreationDateTime));
 
         OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
-        String responseDateTime = formatLocalDateTime(creationDateTime, acceptLanguage);
+        String responseDateTime = formatLocalDateTime(orderEntity.getCreationDateTime(), acceptLanguage);
         orderResponseDto.setCreationDateTime(responseDateTime);
         return orderResponseDto;
     }

@@ -3,9 +3,12 @@ package com.epam.laboratory.restapipractice.dto;
 import java.util.List;
 
 public class ClientResponseDto {
-    private final Long id;
-    private final String clientName;
-    private final List<ClientOrderResponse> orders;
+    private Long id;
+    private String clientName;
+    private List<ClientOrderResponse> orders;
+
+    public ClientResponseDto() {
+    }
 
     public ClientResponseDto(final Long id, final String clientName, final List<ClientOrderResponse> orders) {
         this.id = id;
@@ -26,9 +29,12 @@ public class ClientResponseDto {
     }
 
     public static class ClientOrderResponse {
-        private final Long id;
-        private final Boolean completed;
-        private final String deliveryInf;
+        private Long id;
+        private Boolean completed;
+        private String deliveryInf;
+
+        public ClientOrderResponse() {
+        }
 
         public ClientOrderResponse(final Long id, final Boolean completed, final String deliveryInf) {
             this.id = id;

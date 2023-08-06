@@ -8,16 +8,13 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
-import org.modelmapper.AbstractProvider;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.Provider;
+import org.modelmapper.*;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -61,15 +58,20 @@ public class OrderService {
         };
         mapper.typeMap(OrderRequestDto.class, OrderEntity.class)
                 .addMappings(m -> m.with(localDateTimeProvider)
-                        .map(OrderRequestDto::getClientName, OrderEntity::setCreationDateTime));
+                        .map(OrderRequestDto::getClientId, OrderEntity::setCreationDateTime));
+
+        Locale currentLocale = Locale.forLanguageTag(acceptLanguage);
+        TypeMap<OrderEntity, OrderResponseDto> propertyMapper = mapper.createTypeMap(OrderEntity.class, OrderResponseDto.class);
+        Converter<LocalDateTime, String> localDateTimeToString = c -> c.getSource().format(FORMAT.withLocale(currentLocale));
+        propertyMapper.addMappings(
+                mapper -> mapper.using(localDateTimeToString).map(OrderEntity::getCreationDateTime, OrderResponseDto::setCreationDateTime)
+        );
 
         OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
-        String responseDateTime = formatLocalDateTime(orderEntity.getCreationDateTime(), acceptLanguage);
-        orderResponseDto.setCreationDateTime(responseDateTime);
         return orderResponseDto;
     }
 
-    public OrderListResponseDto getAllOrders() {
+    public OrderListResponseDto getAllOrders(String acceptLanguage, String acceptTimezone) {
         List<OrderEntity> orders = new ArrayList<>();
         orderRepo.findAll().forEach(orders::add);
         return orderMapper.orderToListResponse(orders);
@@ -79,11 +81,5 @@ public class OrderService {
         OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
         orderEntity.setCompleted(true);
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
-    }
-
-    private String formatLocalDateTime(LocalDateTime localDateTime, String acceptLanguage) {
-        Locale locale = Locale.forLanguageTag(acceptLanguage);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT).withLocale(locale);
-        return localDateTime.format(formatter);
     }
 }

@@ -2,14 +2,13 @@ package com.epam.laboratory.restapipractice.service;
 
 import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import com.epam.laboratory.restapipractice.dto.ClientRequestDto;
+import com.epam.laboratory.restapipractice.dto.ClientResponseDto;
+import com.epam.laboratory.restapipractice.dto.ClientsListResponseDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
 import com.epam.laboratory.restapipractice.entity.ClientEntityList;
-import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.mapper.ClientMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.response.CachedClientResponse;
-import com.epam.laboratory.restapipractice.dto.ClientResponseDto;
-import com.epam.laboratory.restapipractice.dto.ClientsListResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +38,6 @@ public class ClientService {
         ClientEntity existingClient = clientRepo.findById(clientEntity.getId()).orElseThrow();
         existingClient.setClientName(clientEntity.getClientName());
         existingClient.setPhone(clientEntity.getPhone());
-        existingClient.setOrders(clientEntity.getOrders());
         ClientEntity updatedClient = clientRepo.save(existingClient);
         return clientMapper.clientToDto(updatedClient);
     }
@@ -50,11 +48,7 @@ public class ClientService {
 
     public static ClientEntityList fromCachedListToEntityList(List<CachedClientResponse> cachedList) {
         List<ClientEntity> cachedListToEntityList = cachedList.stream().map(cachedClientResponse -> new ClientEntity(cachedClientResponse.getId(),
-                        cachedClientResponse.getClientName(), cachedClientResponse.getOrders().stream()
-                        .map(cachedClientOrderResponse -> new OrderEntity(cachedClientOrderResponse.getId(),
-                                cachedClientOrderResponse.getCompleted(),
-                                cachedClientOrderResponse.getDeliveryInf()))
-                        .collect(Collectors.toList())))
+                        cachedClientResponse.getClientName(), cachedClientResponse.getPhone()))
                 .collect(Collectors.toList());
         return new ClientEntityList(cachedListToEntityList);
     }
@@ -65,11 +59,7 @@ public class ClientService {
         return new ClientsListResponseDto(
                 clientEntityList.stream().map(clientEntity -> new ClientResponseDto(clientEntity.getId(),
                                 clientEntity.getClientName(),
-                                clientEntity.getOrders().stream()
-                                        .map(orderEntity -> new ClientResponseDto.ClientOrderResponse(orderEntity.getId(),
-                                                orderEntity.getCompleted(),
-                                                orderEntity.getDeliveryInf()))
-                                        .collect(Collectors.toList())))
+                                clientEntity.getPhone()))
                         .collect(Collectors.toList())
         );
     }

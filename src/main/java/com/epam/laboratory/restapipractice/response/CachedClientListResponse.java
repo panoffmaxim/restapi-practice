@@ -25,11 +25,7 @@ public class CachedClientListResponse {
 
     public static CachedClientListResponse fromEntityListToCachedList(List<ClientEntity> clientEntityList) {
         List<CachedClientResponse> cachedList = clientEntityList.stream().map(clientEntity -> new CachedClientResponse(clientEntity.getId(),
-                        clientEntity.getClientName(), clientEntity.getOrders().stream()
-                        .map(orderEntity -> new CachedClientResponse.CachedClientOrderResponse(orderEntity.getId(),
-                                orderEntity.getCompleted(),
-                                orderEntity.getDeliveryInf()))
-                        .collect(Collectors.toList())))
+                        clientEntity.getClientName(), clientEntity.getPhone()))
                 .collect(Collectors.toList());
         return new CachedClientListResponse(cachedList);
     }

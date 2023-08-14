@@ -15,9 +15,8 @@ CREATE TABLE client (
 
 CREATE TABLE orders (
                       id BIGINT NOT NULL AUTO_INCREMENT,
-                      clientName varchar(64) not null,
                       deliveryInf varchar(64) not null,
-                      completed BOOLEAN NOT NULL,
+                      completed BOOLEAN default false not null,
                       clientId BIGINT,
                       FOREIGN KEY (`clientId`) REFERENCES `client` (`id`),
                       PRIMARY KEY (id)

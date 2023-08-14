@@ -9,7 +9,6 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String clientName;
     private Boolean completed;
     private String deliveryInf;
     private String paymentMethod;
@@ -22,10 +21,13 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, Boolean completed, String deliveryInf) {
+    public OrderEntity(Long id, Boolean completed, String deliveryInf, String paymentMethod, LocalDateTime creationDateTime, ClientEntity client) {
         this.id = id;
         this.completed = completed;
         this.deliveryInf = deliveryInf;
+        this.paymentMethod = paymentMethod;
+        this.creationDateTime = creationDateTime;
+        this.client = client;
     }
 
     public Long getId() {
@@ -34,14 +36,6 @@ public class OrderEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
     }
 
     public Boolean getCompleted() {
@@ -60,14 +54,6 @@ public class OrderEntity {
         this.deliveryInf = deliveryInf;
     }
 
-    public ClientEntity getClient() {
-        return client;
-    }
-
-    public void setClient(ClientEntity client) {
-        this.client = client;
-    }
-
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -84,15 +70,11 @@ public class OrderEntity {
         this.creationDateTime = creationDateTime;
     }
 
-    @Override
-    public String toString() {
-        return "OrderEntity{" +
-                "id=" + id +
-                ", clientName='" + clientName + '\'' +
-                ", completed=" + completed +
-                ", deliveryInf='" + deliveryInf + '\'' +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                ", client=" + client +
-                '}';
+    public ClientEntity getClient() {
+        return client;
+    }
+
+    public void setClient(ClientEntity client) {
+        this.client = client;
     }
 }

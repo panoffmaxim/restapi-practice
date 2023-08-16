@@ -28,15 +28,17 @@ public class OrderMapper {
         }
     };
 
-    public OrderMapper() {
-        this.modelMapper = new ModelMapper();
-        modelMapper.createTypeMap(OrderEntity.class, OrderResponseDto.class)
-                .addMappings(mapper -> mapper.using(localDateTimeToString)
-                        .map(OrderEntity::getCreationDateTime, OrderResponseDto::setCreationDateTime));
+    public OrderMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
 
         modelMapper.typeMap(OrderRequestDto.class, OrderEntity.class)
                 .addMappings(m -> m.with(localDateTimeProvider)
-                        .map(OrderRequestDto::getClientId, OrderEntity::setCreationDateTime));
+                        .map(OrderRequestDto::getDeliveryInf, OrderEntity::setCreationDateTime))
+                .addMapping(src -> Boolean.FALSE, OrderEntity::setCompleted);
+
+        modelMapper.createTypeMap(OrderEntity.class, OrderResponseDto.class)
+                .addMappings(mapper -> mapper.using(localDateTimeToString)
+                        .map(OrderEntity::getCreationDateTime, OrderResponseDto::setCreationDateTime));
     }
 
     public OrderEntity orderToEntity(OrderRequestDto orderRequestDto) {

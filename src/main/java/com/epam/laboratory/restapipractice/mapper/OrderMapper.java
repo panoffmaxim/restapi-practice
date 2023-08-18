@@ -38,7 +38,8 @@ public class OrderMapper {
 
         modelMapper.createTypeMap(OrderEntity.class, OrderResponseDto.class)
                 .addMappings(mapper -> mapper.using(localDateTimeToString)
-                        .map(OrderEntity::getCreationDateTime, OrderResponseDto::setCreationDateTime));
+                        .map(OrderEntity::getCreationDateTime, OrderResponseDto::setCreationDateTime))
+                .addMapping(id -> id.getClient().getId(), OrderResponseDto::setClientId);
     }
 
     public OrderEntity orderToEntity(OrderRequestDto orderRequestDto) {

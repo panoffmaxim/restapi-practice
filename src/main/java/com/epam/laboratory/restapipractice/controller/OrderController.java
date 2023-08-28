@@ -55,9 +55,11 @@ public class OrderController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation
-    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders(
+            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
         try {
-            final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders();
+            final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders(acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all orders", e);

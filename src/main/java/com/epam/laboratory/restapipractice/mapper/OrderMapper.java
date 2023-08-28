@@ -1,6 +1,5 @@
 package com.epam.laboratory.restapipractice.mapper;
 
-import com.epam.laboratory.restapipractice.dto.OrderListResponseDto;
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
 import com.epam.laboratory.restapipractice.entity.OrderEntity;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Objects;
 
 import static com.epam.laboratory.restapipractice.constant.Constants.FORMAT;
@@ -48,9 +46,5 @@ public class OrderMapper {
 
     public OrderResponseDto orderToDto(OrderEntity orderEntity) {
         return Objects.isNull(orderEntity) ? null : modelMapper.map(orderEntity, OrderResponseDto.class);
-    }
-
-    public OrderListResponseDto orderToListResponse(List<OrderEntity> orderEntity) {
-        return Objects.isNull(orderEntity) ? null : modelMapper.map(orderEntity, OrderListResponseDto.class);
     }
 }

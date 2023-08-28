@@ -44,11 +44,11 @@ public abstract class AbstractTest {
         orderTwo = new OrderEntity();
 
         orderOne.setCompleted(true);
-        orderOne.setClientName("josh");
+//        orderOne.setClientName("josh");
         orderOne.setPaymentMethod("credit-card");
         orderOne.setDeliveryInf("today");
         orderTwo.setCompleted(true);
-        orderTwo.setClientName("dan");
+//        orderTwo.setClientName("dan");
         orderTwo.setPaymentMethod("cash");
         orderTwo.setDeliveryInf("tomorrow");
         List<OrderEntity> orders = new ArrayList<>();
@@ -57,7 +57,7 @@ public abstract class AbstractTest {
 
         client.setClientName("Ginger");
         client.setPhone("777");
-        client.setOrders(orders);
+//        client.setOrders(orders);
     }
 
     @AfterEach

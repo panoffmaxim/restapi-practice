@@ -3,7 +3,6 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
-import com.epam.laboratory.restapipractice.dto.OrderListResponseDto;
 import com.epam.laboratory.restapipractice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -11,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -54,11 +55,9 @@ public class OrderController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation
-    public ResponseEntity<OrderListResponseDto> getAllOrders(
-            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
-            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
         try {
-            final OrderListResponseDto orderListResponseDto = orderService.getAllOrders(acceptLanguage, acceptTimezone);
+            final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders();
             return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all orders", e);

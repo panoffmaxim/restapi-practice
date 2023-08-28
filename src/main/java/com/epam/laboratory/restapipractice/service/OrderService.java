@@ -1,6 +1,5 @@
 package com.epam.laboratory.restapipractice.service;
 
-import com.epam.laboratory.restapipractice.dto.OrderListResponseDto;
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
 import com.epam.laboratory.restapipractice.entity.ClientEntity;
@@ -11,8 +10,15 @@ import com.epam.laboratory.restapipractice.repository.OrderRepo;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+import static com.epam.laboratory.restapipractice.constant.Constants.FORMAT;
 
 @Service
 public class OrderService {
@@ -31,14 +37,25 @@ public class OrderService {
 
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
         orderEntity.setClient(client);
+        OrderEntity savedOrderEntity = orderRepo.save(orderEntity);
+        OrderResponseDto createdOrder = orderMapper.orderToDto(savedOrderEntity);
 
-        return orderMapper.orderToDto(orderRepo.save(orderEntity));
+        LocalDateTime creationDateTime = savedOrderEntity.getCreationDateTime();
+        ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+        ZonedDateTime zonedUTC = creationDateTime.atZone(ZoneId.of("UTC"));
+        ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
+        DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
+        String formattedDateTime = zonedDateTime.format(formatter);
+
+        createdOrder.setCreationDateTime(formattedDateTime);
+        return createdOrder;
     }
 
-    public OrderListResponseDto getAllOrders(String acceptLanguage, String acceptTimezone) {
-        List<OrderEntity> orders = new ArrayList<>();
-        orderRepo.findAll().forEach(orders::add);
-        return orderMapper.orderToListResponse(orders);
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepo.findAll()
+                .stream()
+                .map(orderMapper::orderToDto)
+                .collect(Collectors.toList());
     }
 
     public OrderResponseDto completeOrder(Long id) {

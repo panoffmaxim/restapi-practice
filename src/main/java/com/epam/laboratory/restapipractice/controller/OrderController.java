@@ -29,8 +29,8 @@ public class OrderController {
     @LogInvocation
     public ResponseEntity<OrderResponseDto> createOrder(
             @RequestBody OrderRequestDto orderRequestDto,
-            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
-            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
+            @RequestHeader(value = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
         try {
             OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(createdOrder, HttpStatus.OK);
@@ -56,8 +56,8 @@ public class OrderController {
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation
     public ResponseEntity<List<OrderResponseDto>> getAllOrders(
-            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
-            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
+            @RequestHeader(value = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
         try {
             final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders(acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);

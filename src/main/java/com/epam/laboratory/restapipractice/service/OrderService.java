@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.epam.laboratory.restapipractice.constant.Constants.FORMAT;
+import static com.epam.laboratory.restapipractice.constant.Constants.ZONE_UTC_0;
 
 @Service
 public class OrderService {
@@ -42,7 +43,7 @@ public class OrderService {
 
         LocalDateTime creationDateTime = savedOrderEntity.getCreationDateTime();
         ZoneId clientZoneId = ZoneId.of(acceptTimezone);
-        ZonedDateTime zonedUTC = creationDateTime.atZone(ZoneId.of("UTC"));
+        ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
         ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
         DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
         String formattedDateTime = zonedDateTime.format(formatter);
@@ -58,7 +59,7 @@ public class OrderService {
                     OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderEntity);
                     LocalDateTime creationDateTime = orderEntity.getCreationDateTime();
                     ZoneId clientZoneId = ZoneId.of(acceptTimezone);
-                    ZonedDateTime zonedUTC = creationDateTime.atZone(ZoneId.of("UTC"));
+                    ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
                     ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
                     DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
                     String formattedDateTime = zonedDateTime.format(formatter);

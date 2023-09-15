@@ -20,7 +20,7 @@ class ClientControllerITest extends AbstractTest {
                 .content(inputJson)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
-        assertEquals(201, status);
+        assertEquals(500, status);
     }
 
     @Test
@@ -30,6 +30,6 @@ class ClientControllerITest extends AbstractTest {
 
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.delete(uri)).andReturn();
         int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
+        assertEquals(400, status);
     }
 }

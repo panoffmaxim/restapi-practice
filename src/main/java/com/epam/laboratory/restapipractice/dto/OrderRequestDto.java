@@ -1,20 +1,34 @@
 package com.epam.laboratory.restapipractice.dto;
 
 public class OrderRequestDto {
-    private String clientName;
+    private Long clientId;
+    private String deliveryInf;
+    private String paymentMethod;
 
     public OrderRequestDto() {
     }
 
-    public OrderRequestDto(String clientName) {
-        this.clientName = clientName;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public String getClientName() {
-        return clientName;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public String getDeliveryInf() {
+        return deliveryInf;
+    }
+
+    public void setDeliveryInf(String deliveryInf) {
+        this.deliveryInf = deliveryInf;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

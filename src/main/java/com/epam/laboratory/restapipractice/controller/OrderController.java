@@ -3,7 +3,6 @@ package com.epam.laboratory.restapipractice.controller;
 import com.epam.laboratory.restapipractice.customannotations.LogInvocation;
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
-import com.epam.laboratory.restapipractice.response.OrderListResponse;
 import com.epam.laboratory.restapipractice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -11,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -28,11 +29,10 @@ public class OrderController {
     @LogInvocation
     public ResponseEntity<OrderResponseDto> createOrder(
             @RequestBody OrderRequestDto orderRequestDto,
-            @RequestParam Long clientId,
-            @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage,
-            @RequestHeader(value = "Accept-Timezone", required = false) String acceptTimezone) {
+            @RequestHeader(value = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
         try {
-            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, clientId, acceptLanguage, acceptTimezone);
+            OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(createdOrder, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error creating order", e);
@@ -55,13 +55,12 @@ public class OrderController {
     @GetMapping(value = "/all", produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Заказы", description = "Возвращает список заказов")
     @LogInvocation
-    public ResponseEntity<OrderListResponse> getAllOrders() {
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders(
+            @RequestHeader(value = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
         try {
-            final OrderListResponse orderListResponse = orderService.getAllOrders();
-            if (orderListResponse == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(orderListResponse, HttpStatus.OK);
+            final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders(acceptLanguage, acceptTimezone);
+            return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             LOGGER.error("Error getting all orders", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

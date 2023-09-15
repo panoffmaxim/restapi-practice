@@ -4,7 +4,6 @@ import com.epam.laboratory.restapipractice.customannotations.ClientBean;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -22,17 +21,13 @@ public class ClientEntity {
     @Schema(description = "Телефон клиента")
     private String phone;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "client")
-    @Schema(description = "Список заказов клиента")
-    private List<OrderEntity> orders;
-
     public ClientEntity() {
     }
 
-    public ClientEntity(Long id, String clientName, List<OrderEntity> orders) {
+    public ClientEntity(Long id, String clientName, String phone) {
         this.id = id;
         this.clientName = clientName;
-        this.orders = orders;
+        this.phone = phone;
     }
 
     public Long getId() {
@@ -59,21 +54,12 @@ public class ClientEntity {
         this.phone = phone;
     }
 
-    public List<OrderEntity> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderEntity> orders) {
-        this.orders = orders;
-    }
-
     @Override
     public String toString() {
         return "ClientEntity{" +
                 "id=" + id +
                 ", clientName='" + clientName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", orders=" + orders +
                 '}';
     }
 }

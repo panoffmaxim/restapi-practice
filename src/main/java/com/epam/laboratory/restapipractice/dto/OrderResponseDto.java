@@ -1,20 +1,23 @@
 package com.epam.laboratory.restapipractice.dto;
 
-import java.time.LocalDateTime;
-
 public class OrderResponseDto {
     private Long id;
-    private String clientName;
+    private Long clientId;
     private Boolean completed;
-    private LocalDateTime creationDateTime;
+    private String deliveryInf;
+    private String paymentMethod;
+    private String creationDateTime;
 
     public OrderResponseDto() {
     }
 
-    public OrderResponseDto(Long id, String clientName, Boolean completed) {
+    public OrderResponseDto(Long id, Long clientId, Boolean completed, String deliveryInf, String paymentMethod, String creationDateTime) {
         this.id = id;
-        this.clientName = clientName;
+        this.clientId = clientId;
         this.completed = completed;
+        this.deliveryInf = deliveryInf;
+        this.paymentMethod = paymentMethod;
+        this.creationDateTime = creationDateTime;
     }
 
     public Long getId() {
@@ -25,12 +28,12 @@ public class OrderResponseDto {
         this.id = id;
     }
 
-    public String getClientName() {
-        return clientName;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public Boolean getCompleted() {
@@ -41,11 +44,27 @@ public class OrderResponseDto {
         this.completed = completed;
     }
 
-    public LocalDateTime getCreationDateTime() {
+    public String getDeliveryInf() {
+        return deliveryInf;
+    }
+
+    public void setDeliveryInf(String deliveryInf) {
+        this.deliveryInf = deliveryInf;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
+    public void setCreationDateTime(String creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 }

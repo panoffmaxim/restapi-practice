@@ -7,72 +7,71 @@ import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import com.epam.laboratory.restapipractice.mapper.OrderMapper;
 import com.epam.laboratory.restapipractice.repository.ClientRepo;
 import com.epam.laboratory.restapipractice.repository.OrderRepo;
-import com.epam.laboratory.restapipractice.response.OrderListResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+
+import static com.epam.laboratory.restapipractice.constant.Constants.FORMAT;
+import static com.epam.laboratory.restapipractice.constant.Constants.ZONE_UTC_0;
 
 @Service
 public class OrderService {
     private final OrderRepo orderRepo;
     private final ClientRepo clientRepo;
     private final OrderMapper orderMapper;
-    private final ZoneId serverZoneId;
 
     public OrderService(OrderRepo orderRepo, ClientRepo clientRepo, OrderMapper orderMapper) {
         this.orderRepo = orderRepo;
         this.clientRepo = clientRepo;
         this.orderMapper = orderMapper;
-        this.serverZoneId = ZoneId.systemDefault();
     }
 
-    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long clientId, String acceptLanguage, String acceptTimezone) {
-        ClientEntity client = clientRepo.findById(clientId).orElseThrow(() -> new EntityNotFoundException("Client not found"));
-
-        ZonedDateTime currentDateTime;
-        if (acceptTimezone != null && !acceptTimezone.isEmpty()) {
-            ZoneId clientZoneId = ZoneId.of(acceptTimezone);
-            currentDateTime = ZonedDateTime.now(clientZoneId);
-        } else {
-            currentDateTime = ZonedDateTime.now(serverZoneId);
-        }
-        ZonedDateTime formattedDateTime = formatZonedDateTime(currentDateTime, acceptLanguage);
-        LocalDateTime creationDateTime = formattedDateTime.toLocalDateTime();
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String acceptLanguage, String acceptTimezone) {
+        ClientEntity client = clientRepo.findById(orderRequestDto.getClientId()).orElseThrow(() -> new EntityNotFoundException("Client not found"));
 
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
-
-        orderEntity.setCreationDateTime(creationDateTime);
         orderEntity.setClient(client);
-        OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderRepo.save(orderEntity));
-        orderResponseDto.setCreationDateTime(orderEntity.getCreationDateTime());
-        return orderResponseDto;
+        OrderEntity savedOrderEntity = orderRepo.save(orderEntity);
+        OrderResponseDto createdOrder = orderMapper.orderToDto(savedOrderEntity);
+
+        LocalDateTime creationDateTime = savedOrderEntity.getCreationDateTime();
+        ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+        ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
+        ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
+        DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
+        String formattedDateTime = zonedDateTime.format(formatter);
+
+        createdOrder.setCreationDateTime(formattedDateTime);
+        return createdOrder;
     }
 
-    public OrderListResponse getAllOrders() {
-        List<OrderEntity> orders = new ArrayList<>();
-        orderRepo.findAll().forEach(orders::add);
-        OrderListResponse orderListResponse = orderMapper.orderToListResponse(orders);
-        return orderListResponse;
+    public List<OrderResponseDto> getAllOrders(String acceptLanguage, String acceptTimezone) {
+        return orderRepo.findAll()
+                .stream()
+                .map(orderEntity -> {
+                    OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderEntity);
+                    LocalDateTime creationDateTime = orderEntity.getCreationDateTime();
+                    ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+                    ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
+                    ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
+                    DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
+                    String formattedDateTime = zonedDateTime.format(formatter);
+                    orderResponseDto.setCreationDateTime(formattedDateTime);
+                    return orderResponseDto;
+                })
+                .collect(Collectors.toList());
     }
 
     public OrderResponseDto completeOrder(Long id) {
         OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
         orderEntity.setCompleted(true);
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
-    }
-
-    private ZonedDateTime formatZonedDateTime(ZonedDateTime zonedDateTime, String acceptLanguage) {
-        Locale locale = Locale.forLanguageTag(acceptLanguage);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss z").withLocale(locale);
-        return ZonedDateTime.parse(zonedDateTime.format(formatter));
     }
 }

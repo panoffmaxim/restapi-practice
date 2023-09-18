@@ -28,16 +28,16 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @ClientBean
 public class ClientController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
-    @Autowired
-    MessageSource messageSource;
-    @Autowired
-    private ClientCacheService clientCacheService;
+    private final MessageSource messageSource;
+    private final ClientCacheService clientCacheService;
     private final String apiUrl;
     private static final String template = "%s";
     private final ClientService clientService;
 
-    public ClientController(ClientService clientService, @Value("${apiUrl.value}") String apiUrl) {
+    public ClientController(ClientService clientService, ClientCacheService clientCacheService, MessageSource messageSource, @Value("${apiUrl.value}") String apiUrl) {
         this.clientService = clientService;
+        this.clientCacheService = clientCacheService;
+        this.messageSource = messageSource;
         this.apiUrl = apiUrl;
     }
 

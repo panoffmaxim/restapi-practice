@@ -30,28 +30,28 @@ public class ClientControllerTest {
     @Mock
     private MessageSource messageSource;
 
-//    @Test
-//    public void testCreateClient() {
-//        MockHttpServletRequest request = new MockHttpServletRequest();
-//        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-//
-//        ClientRequestDto clientRequestDto = new ClientRequestDto();
-//        clientRequestDto.setClientName("Jon");
-//        clientRequestDto.setPhone("555-666");
-//        ClientResponseDto expectedResponse = new ClientResponseDto();
-//        expectedResponse.setId(1L);
-//        expectedResponse.setClientName("Jon");
-//        expectedResponse.setPhone("555-666");
-//
-//        when(clientService.registration(any(ClientRequestDto.class))).thenReturn(expectedResponse);
-//
-//        ResponseEntity<ClientResponseDto> responseEntity = clientController.create(clientRequestDto);
-//
-//        verify(clientCacheService, atLeastOnce()).deleteAllClientsFromCache();
-//        verify(clientService, times(1)).registration(clientRequestDto);
-//        assert responseEntity.getStatusCode() == HttpStatus.CREATED;
-//        assert responseEntity.getBody() == expectedResponse;
-//    }
+    @Test
+    public void testCreateClient() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        ClientRequestDto clientRequestDto = new ClientRequestDto();
+        clientRequestDto.setClientName("Jon");
+        clientRequestDto.setPhone("555-666");
+        ClientResponseDto expectedResponse = new ClientResponseDto();
+        expectedResponse.setId(1L);
+        expectedResponse.setClientName("Jon");
+        expectedResponse.setPhone("555-666");
+
+        when(clientService.registration(any(ClientRequestDto.class))).thenReturn(expectedResponse);
+
+        ResponseEntity<ClientResponseDto> responseEntity = clientController.create(clientRequestDto);
+
+        verify(clientCacheService, atLeastOnce()).deleteAllClientsFromCache();
+        verify(clientService, times(1)).registration(clientRequestDto);
+        assert responseEntity.getStatusCode() == HttpStatus.CREATED;
+        assert responseEntity.getBody() == expectedResponse;
+    }
 
     @Test
     public void testReadClient() {
@@ -77,13 +77,13 @@ public class ClientControllerTest {
         assert response.getBody() == updatedClientResponse;
     }
 
-//    @Test
-//    public void testDeleteClient() {
-//        Long clientId = 1L;
-//        doNothing().when(clientService).deleteClient(clientId);
-//        ResponseEntity<Void> response = clientController.delete(clientId);
-//        verify(clientService, times(1)).deleteClient(clientId);
-//        verify(clientCacheService, times(1)).deleteAllClientsFromCache();
-//        assert response.getStatusCode() == HttpStatus.OK;
-//    }
+    @Test
+    public void testDeleteClient() {
+        Long clientId = 1L;
+        doNothing().when(clientService).deleteClient(clientId);
+        ResponseEntity<Void> response = clientController.delete(clientId);
+        verify(clientService, times(1)).deleteClient(clientId);
+        verify(clientCacheService, times(1)).deleteAllClientsFromCache();
+        assert response.getStatusCode() == HttpStatus.OK;
+    }
 }

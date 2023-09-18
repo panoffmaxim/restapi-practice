@@ -25,4 +25,16 @@ public class ClientResponseDto {
     public String getPhone() {
         return phone;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

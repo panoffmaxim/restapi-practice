@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven 3.9.4'
-        jdk 'jdk11'
+        maven 'MAVEN_HOME'
+        jdk 'JAVA_HOME'
     }
 
     triggers {

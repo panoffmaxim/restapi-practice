@@ -2,23 +2,21 @@ package com.epam.laboratory.restapipractice.controller;
 
 import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
+import com.epam.laboratory.restapipractice.entity.OrderEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@Testcontainers
-public class OrderControllerIntegrationTest {
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureWebTestClient
+//@Testcontainers
+public class OrderControllerIT extends AbstractTest {
     @Container
     static final MySQLContainer MY_SQL_CONTAINER;
 
@@ -41,19 +39,20 @@ public class OrderControllerIntegrationTest {
 
     @Test
     void testCreateOrder() {
-        OrderRequestDto orderRequestDto = new OrderRequestDto();
-        orderRequestDto.setClientId(1L);
-        orderRequestDto.setDeliveryInf("order-2");
-        orderRequestDto.setPaymentMethod("cash");
+//        OrderRequestDto orderRequestDto = new OrderRequestDto();
+//        orderRequestDto.setClientId(1L);
+//        orderRequestDto.setDeliveryInf("order-2");
+//        orderRequestDto.setPaymentMethod("cash");
         webTestClient.post()
                 .uri("/orders/create")
-                .bodyValue(orderRequestDto)
+                .bodyValue(orderOne)
                 .exchange()
                 .expectHeader()
                 .contentType(MediaType.APPLICATION_JSON)
                 .expectStatus().isOk()
-                .expectBody(OrderRequestDto.class)
+                .expectBody(OrderEntity.class)
                 .consumeWith(order -> Assertions.assertNotNull(order.getResponseBody().getDeliveryInf()));
+//        .andExpect()???
     }
 
     @Test

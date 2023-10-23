@@ -33,7 +33,7 @@ public class OrderController {
             @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
         try {
             OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
-            return new ResponseEntity<>(createdOrder, HttpStatus.OK);
+            return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
         } catch (Exception e) {
             LOGGER.error("Error creating order", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

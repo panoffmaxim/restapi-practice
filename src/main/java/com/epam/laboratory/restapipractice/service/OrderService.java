@@ -49,6 +49,7 @@ public class OrderService {
         String formattedDateTime = zonedDateTime.format(formatter);
 
         createdOrder.setCreationDateTime(formattedDateTime);
+        createdOrder.setClientId(client.getId());
         return createdOrder;
     }
 

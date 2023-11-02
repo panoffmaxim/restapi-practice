@@ -1,129 +1,216 @@
-#openapi: 3.0.2
-#info:
-#  title: "REST API"
-#  description: "EPAM's lab application"
-#  version: "1.0.0"
-#  contact:
-#    name: "username"
-#    url: "https://openweathermap.org/api"
-#    email: "test@gmail.com"
-#  license:
-#    name: "Apache 2.0"
-#    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-#servers:
-#  url: "http://localhost:8080/"
-#  description: "Локальный сервер"
-#tags:
-#  - name: "clients"
-#    description: "Взаимодействие с клиентами"
-#paths:
-#  /clients:
-#    post:
-#      tags:
-#        - "Клиенты"
-#      summary: "Создание клиента"
-#      description: "Позволяет создать нового клиента"
-#      operationId: "create"
-#      produces:
-#        - "application/xml"
-#        - "application/json"
-#      parameters:
-#        - in: "body"
-#          name: "body"
-#          description: "Создание entity клиента"
-#          required: true
-#          schema:
-#            $ref: "#/definitions/Clients"
-#      responses:
-#        default:
-#          description: "Операция успешна"
-#  /clients/{id}:
-#    get:
-#      tags:
-#        - "Клиенты"
-#      summary: "Нахождение клиента"
-#      description: "Возвращает клиента по его ID"
-#      operationId: "read"
-#      produces:
-#        - "application/xml"
-#        - "application/json"
-#      parameters:
-#        - name: "id"
-#          in: "path"
-#          description: "Необходимо указать ID клиента"
-#          required: true
-#          type: "integer"
-#          format: "int64"
-#      responses:
-#        "200":
-#          description: "Операция успешна"
-#          schema:
-#            $ref: "#/definitions/Clients"
-#        "400":
-#          description: "Неверный ID клиента"
-#        "404":
-#          description: "Клиент не найден"
-#    put:
-#      tags:
-#        - "Клиенты"
-#      summary: "Обновление данных клиента"
-#      description: "Обновляет клиента с заданным ID"
-#      operationId: "update"
-#      produces:
-#        - "application/xml"
-#        - "application/json"
-#      parameters:
-#        - name: "id"
-#          in: "path"
-#          description: "ID клиента для обновления"
-#          required: true
-#          type: "integer"
-#          format: "int64"
-#        - in: "body"
-#          name: "body"
-#          schema:
-#            $ref: "#/definitions/Clients"
-#      responses:
-#        "400":
-#          description: "Неверный ID клиента"
-#        "404":
-#          description: "Клиент не найден"
-#    delete:
-#      tags:
-#        - "Клиенты"
-#      summary: "Удаление клиента"
-#      description: "Удаляет клиента с заданным ID"
-#      operationId: "delete"
-#      produces:
-#        - "application/xml"
-#        - "application/json"
-#      parameters:
-#        - name: "id"
-#          in: "path"
-#          description: "ID клиента для удаления"
-#          required: true
-#          type: "integer"
-#          format: "int64"
-#      responses:
-#        "400":
-#          description: "Неверный ID клиента"
-#        "404":
-#          description: "Клиент не найден"
-#definitions:
-#  Client:
-#    type: "object"
-#    properties:
-#      id:
-#        type: "integer"
-#        format: "int64"
-#      clientName:
-#        type: "string"
-#      phone:
-#        type: "string"
-#      orders:
-#        type: "array"
-#    xml:
-#      name: "Clients"
-#externalDocs:
-#  description: "Find out app on github"
-#  url: "https://github.com/panoffmaxim/restapi-practice"
+openapi: 3.0.2
+info:
+  title: "REST API"
+  description: "EPAM's lab application"
+  version: "1.0.0"
+  contact:
+    name: "username"
+    url: "https://openweathermap.org/api"
+    email: "test@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  url: "http://localhost:8080/"
+  description: "Локальный сервер"
+tags:
+  - name: "clients"
+    description: "Взаимодействие с клиентами"
+
+paths:
+  /clients:
+    post:
+      summary: Создание клиента
+      description: Позволяет создать нового клиента
+      operationId: createClient
+      requestBody:
+        description: Данные клиента для создания
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequestDto'
+      responses:
+        '201':
+          description: Создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponseDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /clients/{id}:
+    get:
+      summary: Нахождение клиента
+      description: Возвращает клиента по его ID
+      operationId: getClient
+      parameters:
+        - name: id
+          in: path
+          description: ID клиента
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponseDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+    put:
+      summary: Обновление данных клиента
+      description: Обновляет клиента с заданным ID
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          description: ID клиента
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Данные клиента для обновления
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRequestDto'
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientResponseDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+    delete:
+      summary: Удаление клиента
+      description: Удаляет клиента с заданным ID
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          description: ID клиента
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Успешно
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /clients/all:
+    get:
+      summary: Клиенты
+      description: Возвращает список клиентов
+      operationId: getAllClients
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientsListResponseDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /clients/random:
+    get:
+      summary: Создание нового экземпляра RestTemplate
+      description: Возвращает ответ от внешнего API посредством RestTemplate
+      operationId: createRandomResponse
+      parameters:
+        - name: service
+          in: query
+          description: Сервис
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomResponse'
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  schemas:
+    ClientRequestDto:
+      type: object
+      properties:
+        clientName:
+          type: string
+          description: Имя клиента
+          example: "Иван"
+        phone:
+          type: string
+          description: Телефон клиента
+          example: "+7-700-111-11-11"
+      example:
+        clientName: "Иван"
+        phone: "+7-700-111-11-11"
+
+    ClientResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор клиента
+          example: 1
+        clientName:
+          type: string
+          description: Имя клиента
+          example: "Иван"
+        phone:
+          type: string
+          description: Номер телефона клиента
+          example: "+7-700-111-11-11"
+      example:
+        id: 1
+        clientName: "Иван"
+        phone: "+7-700-111-11-11"
+
+    ClientsListResponseDto:
+      type: object
+      properties:
+        clients:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientResponseDto'
+      example:
+        clients:
+          - id: 1
+            clientName: "Иван"
+            phone: "123-456-7890"
+          - id: 2
+            clientName: "Степан"
+            phone: "987-654-3210"
+
+    RandomResponse:
+      type: object
+      properties:
+        service:
+          type: string
+          description: Название сервиса
+          example: "math"
+        randomFact:
+          type: string
+          description: Случайный факт
+          example: "Это факт"
+
+externalDocs:
+  description: "Find out app on github"
+  url: "https://github.com/panoffmaxim/restapi-practice"

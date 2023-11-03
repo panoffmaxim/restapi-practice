@@ -5,8 +5,7 @@ import com.epam.laboratory.restapipractice.dto.OrderRequestDto;
 import com.epam.laboratory.restapipractice.dto.OrderResponseDto;
 import com.epam.laboratory.restapipractice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/orders")
+@Slf4j
 public class OrderController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -35,7 +34,7 @@ public class OrderController {
             OrderResponseDto createdOrder = orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
         } catch (Exception e) {
-            LOGGER.error("Error creating order", e);
+            log.error("Error creating order", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -47,7 +46,7 @@ public class OrderController {
             OrderResponseDto completedOrder = orderService.completeOrder(id);
             return new ResponseEntity<>(completedOrder, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error completing order", e);
+            log.error("Error completing order", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
     }
@@ -62,7 +61,7 @@ public class OrderController {
             final List<OrderResponseDto> orderListResponseDto = orderService.getAllOrders(acceptLanguage, acceptTimezone);
             return new ResponseEntity<>(orderListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error getting all orders", e);
+            log.error("Error getting all orders", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

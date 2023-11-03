@@ -10,8 +10,7 @@ import com.epam.laboratory.restapipractice.service.ClientCacheService;
 import com.epam.laboratory.restapipractice.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -25,8 +24,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/clients")
 @Tag(name = "Клиенты", description = "Взаимодействие с клиентами")
 @ClientBean
+@Slf4j
 public class ClientController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     private final MessageSource messageSource;
     private final ClientCacheService clientCacheService;
     private final String apiUrl;
@@ -49,7 +48,7 @@ public class ClientController {
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(registeredClient, HttpStatus.CREATED);
         } catch (Exception e) {
-            LOGGER.error("Error creating client", e);
+            log.error("Error creating client", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -59,11 +58,11 @@ public class ClientController {
     @LogInvocation
     public ResponseEntity<ClientResponseDto> read(@PathVariable(name = "id") Long id) {
         try {
-            LOGGER.info("Controller: Fetching user with id {}", id);
+            log.info("Controller: Fetching user with id {}", id);
             ClientResponseDto clientResponseDto = clientService.getClient(id);
             return new ResponseEntity<>(clientResponseDto, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error reading client", e);
+            log.error("Error reading client", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,7 +75,7 @@ public class ClientController {
             final ClientsListResponseDto clientsListResponseDto = clientService.getAllClients();
             return new ResponseEntity<>(clientsListResponseDto, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error getting all clients", e);
+            log.error("Error getting all clients", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,7 +88,7 @@ public class ClientController {
             ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error updating client", e);
+            log.error("Error updating client", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -99,12 +98,12 @@ public class ClientController {
     @LogInvocation
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         try {
-            LOGGER.info("Controller: Deleting user with id {}", id);
+            log.info("Controller: Deleting user with id {}", id);
             clientService.deleteClient(id);
             clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            LOGGER.error("Error deleting client", e);
+            log.error("Error deleting client", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

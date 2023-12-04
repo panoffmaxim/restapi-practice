@@ -75,4 +75,9 @@ public class OrderService {
         orderEntity.setCompleted(true);
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
+
+    public OrderResponseDto getOrder(Long id) {
+        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
+        return orderMapper.orderToDto(orderEntity);
+    }
 }

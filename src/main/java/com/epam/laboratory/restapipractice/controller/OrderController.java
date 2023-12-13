@@ -65,4 +65,21 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Нахождение заказа", description = "Возвращает заказ по его ID")
+    @LogInvocation
+    public ResponseEntity<OrderResponseDto> getOrder(
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(value = "Accept-Language", defaultValue = "en-US") String acceptLanguage,
+            @RequestHeader(value = "Accept-Timezone", defaultValue = "UTC") String acceptTimezone) {
+        try {
+            log.info("Controller: Fetching order with id {}", id);
+            OrderResponseDto orderResponseDto = orderService.getOrder(id, acceptLanguage, acceptTimezone);
+            return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error reading order", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

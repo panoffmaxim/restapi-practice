@@ -76,8 +76,16 @@ public class OrderService {
         return orderMapper.orderToDto(orderRepo.save(orderEntity));
     }
 
-    public OrderResponseDto getOrder(Long id) {
-        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow();
-        return orderMapper.orderToDto(orderEntity);
+    public OrderResponseDto getOrder(Long id, String acceptLanguage, String acceptTimezone) {
+        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderEntity);
+        LocalDateTime creationDateTime = orderEntity.getCreationDateTime();
+        ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+        ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
+        ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
+        DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
+        String formattedDateTime = zonedDateTime.format(formatter);
+        orderResponseDto.setCreationDateTime(formattedDateTime);
+        return orderResponseDto;
     }
 }

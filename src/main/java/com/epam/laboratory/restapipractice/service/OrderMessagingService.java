@@ -36,9 +36,13 @@ public class OrderMessagingService {
             try {
                 Long orderId = Long.parseLong(messageCompletedOrderId);
                 Long clientId = Long.parseLong(messageClientId);
-                OrderResponseDto orderResponseDto = orderService.getOrder(orderId, acceptLanguage, acceptTimezone);
-                orderResponseDto.setClientId(clientId);
-
+                OrderResponseDto orderResponseDto = null;
+                try {
+                    orderResponseDto = orderService.getOrder(orderId, acceptLanguage, acceptTimezone);
+                    orderResponseDto.setClientId(clientId);
+                } catch (Exception e) {
+                    log.info("Error getting order");
+                }
                 if (orderResponseDto.getId() != null) {
                     log.info("Order found. Completing order: {}", orderId);
                     orderService.completeOrder(orderId);
@@ -46,7 +50,7 @@ public class OrderMessagingService {
                 } else {
                     log.info("Order not found. Creating new order.");
                     OrderRequestDto orderRequestDto = new OrderRequestDto();
-                    orderRequestDto.setClientId(orderResponseDto.getClientId());
+                    orderRequestDto.setClientId(clientId);
                     orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
                     acknowledgment.nack(3000);
                 }

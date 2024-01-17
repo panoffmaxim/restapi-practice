@@ -70,9 +70,9 @@ public class ClientControllerTest {
         Long clientId = 1L;
         ClientRequestDto clientRequestDto = new ClientRequestDto();
         ClientResponseDto updatedClientResponse = new ClientResponseDto();
-        when(clientService.updateClient(clientRequestDto)).thenReturn(updatedClientResponse);
+        when(clientService.updateClient(clientId, clientRequestDto)).thenReturn(updatedClientResponse);
         ResponseEntity<ClientResponseDto> response = clientController.update(clientId, clientRequestDto);
-        verify(clientService, times(1)).updateClient(clientRequestDto);
+        verify(clientService, times(1)).updateClient(clientId, clientRequestDto);
         assert response.getStatusCode() == HttpStatus.OK;
         assert response.getBody() == updatedClientResponse;
     }

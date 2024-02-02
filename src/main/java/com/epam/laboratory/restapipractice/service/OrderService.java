@@ -35,7 +35,6 @@ public class OrderService {
 
     public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String acceptLanguage, String acceptTimezone) {
         ClientEntity client = clientRepo.findById(orderRequestDto.getClientId()).orElseThrow(() -> new EntityNotFoundException("Client not found"));
-
         OrderEntity orderEntity = orderMapper.orderToEntity(orderRequestDto);
         orderEntity.setClient(client);
         OrderEntity savedOrderEntity = orderRepo.save(orderEntity);
@@ -65,6 +64,7 @@ public class OrderService {
                     DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
                     String formattedDateTime = zonedDateTime.format(formatter);
                     orderResponseDto.setCreationDateTime(formattedDateTime);
+                    orderResponseDto.setClientId(orderEntity.getClient().getId());
                     return orderResponseDto;
                 })
                 .collect(Collectors.toList());
@@ -77,15 +77,18 @@ public class OrderService {
     }
 
     public OrderResponseDto getOrder(Long id, String acceptLanguage, String acceptTimezone) {
-        OrderEntity orderEntity = orderRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderEntity);
-        LocalDateTime creationDateTime = orderEntity.getCreationDateTime();
-        ZoneId clientZoneId = ZoneId.of(acceptTimezone);
-        ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
-        ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
-        DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
-        String formattedDateTime = zonedDateTime.format(formatter);
-        orderResponseDto.setCreationDateTime(formattedDateTime);
-        return orderResponseDto;
+        OrderEntity orderEntity = orderRepo.findById(id).orElse(null);
+        if (orderEntity == null) {
+            return null;
+        }
+            OrderResponseDto orderResponseDto = orderMapper.orderToDto(orderEntity);
+            LocalDateTime creationDateTime = orderEntity.getCreationDateTime();
+            ZoneId clientZoneId = ZoneId.of(acceptTimezone);
+            ZonedDateTime zonedUTC = creationDateTime.atZone(ZONE_UTC_0);
+            ZonedDateTime zonedDateTime = zonedUTC.withZoneSameInstant(clientZoneId);
+            DateTimeFormatter formatter = FORMAT.withLocale(Locale.forLanguageTag(acceptLanguage));
+            String formattedDateTime = zonedDateTime.format(formatter);
+            orderResponseDto.setCreationDateTime(formattedDateTime);
+            return orderResponseDto;
     }
 }

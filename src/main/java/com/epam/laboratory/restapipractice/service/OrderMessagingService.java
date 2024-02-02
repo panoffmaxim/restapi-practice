@@ -20,7 +20,7 @@ public class OrderMessagingService {
     private static final String KAFKA_CONSUMER_GROUP_ID = "${spring.kafka.consumer.group-id}";
 
     @Transactional
-    @KafkaListener(topics = TOPIC_NAME, groupId = KAFKA_CONSUMER_GROUP_ID)
+    @KafkaListener(topics = TOPIC_NAME, groupId = KAFKA_CONSUMER_GROUP_ID, containerFactory = "kafkaListenerContainerFactory")
     public void receiveOrderMessage(Message<?> message, Acknowledgment acknowledgment) {
         String messagePayload = message.getPayload().toString();
         String[] parts = messagePayload.split("\\|");
@@ -39,23 +39,26 @@ public class OrderMessagingService {
                 OrderResponseDto orderResponseDto = null;
                 try {
                     orderResponseDto = orderService.getOrder(orderId, acceptLanguage, acceptTimezone);
+                    log.info("Client ID value: {}", clientId);
                     orderResponseDto.setClientId(clientId);
                 } catch (Exception e) {
                     log.info("Error getting order");
                 }
-                if (orderResponseDto.getId() != null) {
-                    log.info("Order found. Completing order: {}", orderId);
-                    orderService.completeOrder(orderId);
-                    acknowledgment.acknowledge();
-                } else {
+                if (orderResponseDto == null) {
                     log.info("Order not found. Creating new order.");
                     OrderRequestDto orderRequestDto = new OrderRequestDto();
+                    log.info("Client ID value: {}", clientId);
                     orderRequestDto.setClientId(clientId);
+                    orderRequestDto.setDeliveryInf("1");
                     orderService.createOrder(orderRequestDto, acceptLanguage, acceptTimezone);
-                    acknowledgment.nack(3000);
+                } else {
+                    log.info("Order found. Completing order: {}", orderId);
+                    orderService.completeOrder(orderId);
                 }
             } catch (Exception e) {
                 log.error("Error processing order", e);
+            } finally {
+                acknowledgment.acknowledge();
             }
         } else {
             log.error("Invalid message format: {}", messagePayload);

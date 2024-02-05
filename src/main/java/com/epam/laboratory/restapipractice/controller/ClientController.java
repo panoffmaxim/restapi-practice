@@ -85,7 +85,9 @@ public class ClientController {
     @LogInvocation
     public ResponseEntity<ClientResponseDto> update(@PathVariable(name = "id") Long id, @RequestBody ClientRequestDto clientRequestDto) {
         try {
-            ClientResponseDto updatedClient = clientService.updateClient(clientRequestDto);
+            ClientResponseDto updatedClient = clientService.updateClient(id, clientRequestDto);
+            log.info("Controller: Updating user with id {}", id);
+            clientCacheService.deleteAllClientsFromCache();
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error updating client", e);

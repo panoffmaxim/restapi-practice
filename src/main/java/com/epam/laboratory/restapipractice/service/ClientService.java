@@ -33,9 +33,9 @@ public class ClientService {
         return clientMapper.clientToDto(clientRepo.findById(id).orElseThrow());
     }
 
-    public ClientResponseDto updateClient(ClientRequestDto clientRequestDto) {
+    public ClientResponseDto updateClient(Long id, ClientRequestDto clientRequestDto) {
         ClientEntity clientEntity = clientMapper.clientToEntity(clientRequestDto);
-        ClientEntity existingClient = clientRepo.findById(clientEntity.getId()).orElseThrow();
+        ClientEntity existingClient = clientRepo.findById(id).orElseThrow();
         existingClient.setClientName(clientEntity.getClientName());
         existingClient.setPhone(clientEntity.getPhone());
         ClientEntity updatedClient = clientRepo.save(existingClient);
